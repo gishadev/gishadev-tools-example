@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4c1bf31516e49929123b7c97852187f, type: 3}
+  m_Name: AudioMasterSO
+  m_EditorClassIdentifier: 
+  <MusicCollection>k__BackingField:
+  - <Name>k__BackingField: cool_music
+    <AudioClips>k__BackingField:
+    - {fileID: 8300000, guid: b404011f5766068448c6bcef487ea957, type: 3}
+    <Volume>k__BackingField: 0
+    <Pitch>k__BackingField: 0
+    <IsLooping>k__BackingField: 0
+    <IsFade>k__BackingField: 0
+  <SFXCollection>k__BackingField:
+  - <Name>k__BackingField: beep
+    <AudioClips>k__BackingField: []
+    <Volume>k__BackingField: 0
+    <Pitch>k__BackingField: 0
+  - <Name>k__BackingField: shoot
+    <AudioClips>k__BackingField: []
+    <Volume>k__BackingField: 0
+    <Pitch>k__BackingField: 0
