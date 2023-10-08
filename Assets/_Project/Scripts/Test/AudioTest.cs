@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using gishadev.tools.Audio;
+using UnityEngine;
 
 namespace gishadev.tools.Test
 {
@@ -6,9 +7,8 @@ namespace gishadev.tools.Test
     {
         private void Awake()
         {
-            AudioManager.I.PlayAudio(0, AudioType.Music);
-            AudioManager.I.PlayAudio(0, AudioType.SFX);
-            AudioManager.I.PlayAudio(1, AudioType.SFX);
+            AudioManager.I.PlayAudio<MusicData>(0);
+            AudioManager.I.PlayAudio<SFXData>("shoot");
         }
     }
 }
