@@ -14,33 +14,31 @@ namespace gishadev.tools.Audio
         [field: SerializeField, Tooltip("Variations of Audio")]
         public AudioClip[] AudioClips { get; private set; }
 
-        [field: SerializeField, Range(0f, 1f)] public float Volume { get; private set; }
+        [field: SerializeField, Range(0f, 1f)] public float InitialVolume { get; private set; }
 
         [field: SerializeField, Range(0.3f, 3f)]
         public float Pitch { get; private set; }
 
-        protected AudioSource AudioSource { get; private set; }
+        public AudioSource AudioSource { get; private set; }
+        public virtual BaseAudioPlayer AudioPlayer { get; private set; }
 
         public virtual void InitAudioSource(AudioSource audioSource)
         {
             AudioSource = audioSource;
 
             AudioSource.clip = AudioClips[0];
-            AudioSource.volume = Volume;
+            AudioSource.volume = InitialVolume;
             AudioSource.pitch = Pitch;
         }
-
-        public void Play()
+        
+        public virtual void InitAudioPlayer(BaseAudioPlayer audioPlayer)
         {
-            // Randomize clip.
-            if (AudioClips.Length > 1)
-                AudioSource.clip = AudioClips[Random.Range(0, AudioClips.Length)];
-
-            AudioSource.Play();
+            AudioPlayer = audioPlayer;
         }
 
-        public void Pause() => AudioSource.Pause();
-        public void Stop() => AudioSource.Stop();
+        public abstract void Play();
+        public abstract void Pause();
+        public abstract void Stop();
     }
 
     [Serializable]
@@ -57,10 +55,17 @@ namespace gishadev.tools.Audio
             base.InitAudioSource(audioSource);
             AudioSource.loop = IsLooping;
         }
+
+        public override void Play() => ((MusicPlayer)AudioPlayer).Play(this);
+        public override void Pause() => ((MusicPlayer)AudioPlayer).Pause(this);
+        public override void Stop() => ((MusicPlayer)AudioPlayer).Stop(this);
     }
 
     [Serializable]
     public class SFXData : AudioData
     {
+        public override void Play() => ((SFXPlayer)AudioPlayer).Play(this);
+        public override void Pause() => ((SFXPlayer)AudioPlayer).Pause(this);
+        public override void Stop() => ((SFXPlayer)AudioPlayer).Stop(this);
     }
 }

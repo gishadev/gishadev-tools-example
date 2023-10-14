@@ -2,10 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using gishadev.tools.Audio;
 using UnityEngine;
 
-namespace gishadev.tools
+namespace gishadev.tools.Audio
 {
     public class AudioManager : MonoBehaviour
     {
@@ -28,6 +27,7 @@ namespace gishadev.tools
         private static AudioManager _current;
 
         private AudioMasterSO _audioSO;
+        private MusicPlayer _musicPlayer;
         private bool _isInitialized;
 
 
@@ -58,7 +58,7 @@ namespace gishadev.tools
         public void PlayAudio<T>(string name) where T : AudioData, new()
         {
             TryInit();
-            
+
             var audioCollection = GetAudioCollection<T>();
 
             var index = Array.FindIndex(audioCollection, sfx => sfx.Name == name);
@@ -73,6 +73,8 @@ namespace gishadev.tools
             InitCollection(_audioSO.SFXCollection);
             InitCollection(_audioSO.MusicCollection);
 
+            _musicPlayer = new MusicPlayer(this);
+
             _isInitialized = true;
         }
 
@@ -82,8 +84,12 @@ namespace gishadev.tools
                 Init();
         }
 
-        private void InitCollection<T>(IEnumerable<T> collection) where T : AudioData
+        private void InitCollection<T>(IEnumerable<T> collection) where T : AudioData, new()
         {
+            // Init audio player.
+            BaseAudioPlayer audioPlayer =
+                typeof(T) == typeof(MusicData) ? new MusicPlayer(this) : new SFXPlayer(this);
+
             foreach (var audio in collection)
             {
                 var child = new GameObject(audio.Name);
@@ -91,6 +97,52 @@ namespace gishadev.tools
 
                 var audioSource = child.AddComponent<AudioSource>();
                 audio.InitAudioSource(audioSource);
+                audio.InitAudioPlayer(audioPlayer);
+            }
+        }
+
+        #endregion
+
+        #region Fade Transitions
+
+        public void FadeIn(AudioData audioData)
+        {
+            StartCoroutine(FadeInRoutine(audioData));
+        }
+
+        public void FadeOut(AudioData audioData)
+        {
+            StartCoroutine(FadeOutRoutine(audioData));
+        }
+
+        private IEnumerator FadeInRoutine(AudioData audioData)
+        {
+            audioData.AudioSource.volume = 0f;
+            var volume = audioData.AudioSource.volume;
+
+            while (audioData.AudioSource.volume < audioData.InitialVolume)
+            {
+                volume +=  Time.deltaTime / _audioSO.FadeTransitionTime;
+                audioData.AudioSource.volume = volume;
+                yield return null;
+            }
+        }
+
+        private IEnumerator FadeOutRoutine(AudioData audioData)
+        {
+            var volume = audioData.AudioSource.volume;
+
+            while (audioData.AudioSource.volume > 0)
+            {
+                volume -= Time.deltaTime / _audioSO.FadeTransitionTime;
+                audioData.AudioSource.volume = volume;
+                yield return null;
+            }
+
+            if (audioData.AudioSource.volume == 0)
+            {
+                audioData.AudioSource.Stop();
+                audioData.AudioSource.volume = audioData.InitialVolume;
             }
         }
 
