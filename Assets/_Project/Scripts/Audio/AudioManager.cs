@@ -24,10 +24,12 @@ namespace gishadev.tools.Audio
             }
         }
 
+        public delegate void DelayedDelegate();
+        public AudioMasterSO MasterData => _masterData;
+
         private static AudioManager _current;
 
-        private AudioMasterSO _audioSO;
-        private MusicPlayer _musicPlayer;
+        private AudioMasterSO _masterData;
         private bool _isInitialized;
 
 
@@ -69,11 +71,9 @@ namespace gishadev.tools.Audio
 
         private void Init()
         {
-            _audioSO = Resources.Load<AudioMasterSO>(AUDIO_MASTER_ASSET);
-            InitCollection(_audioSO.SFXCollection);
-            InitCollection(_audioSO.MusicCollection);
-
-            _musicPlayer = new MusicPlayer(this);
+            _masterData = Resources.Load<AudioMasterSO>(AUDIO_MASTER_ASSET);
+            InitCollection(MasterData.SFXCollection);
+            InitCollection(MasterData.MusicCollection);
 
             _isInitialized = true;
         }
@@ -103,7 +103,6 @@ namespace gishadev.tools.Audio
 
         #endregion
 
-        #region Fade Transitions
 
         public void FadeIn(AudioData audioData)
         {
@@ -115,6 +114,12 @@ namespace gishadev.tools.Audio
             StartCoroutine(FadeOutRoutine(audioData));
         }
 
+        public void DelayFunc(DelayedDelegate delayedDelegate, float delay)
+        {
+            StopCoroutine(nameof(DelayFuncRoutine));
+            StartCoroutine(DelayFuncRoutine(delayedDelegate, delay));
+        }
+
         private IEnumerator FadeInRoutine(AudioData audioData)
         {
             audioData.AudioSource.volume = 0f;
@@ -122,7 +127,7 @@ namespace gishadev.tools.Audio
 
             while (audioData.AudioSource.volume < audioData.InitialVolume)
             {
-                volume +=  Time.deltaTime / _audioSO.FadeTransitionTime;
+                volume += Time.deltaTime / MasterData.FadeTransitionTime;
                 audioData.AudioSource.volume = volume;
                 yield return null;
             }
@@ -134,7 +139,7 @@ namespace gishadev.tools.Audio
 
             while (audioData.AudioSource.volume > 0)
             {
-                volume -= Time.deltaTime / _audioSO.FadeTransitionTime;
+                volume -= Time.deltaTime / MasterData.FadeTransitionTime;
                 audioData.AudioSource.volume = volume;
                 yield return null;
             }
@@ -146,13 +151,18 @@ namespace gishadev.tools.Audio
             }
         }
 
-        #endregion
+        private IEnumerator DelayFuncRoutine(DelayedDelegate delayedDelegate, float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            delayedDelegate();
+        }
+
 
         private T[] GetAudioCollection<T>() where T : AudioData, new()
         {
             return typeof(T) == typeof(MusicData)
-                ? _audioSO.MusicCollection.Cast<T>().ToArray()
-                : _audioSO.SFXCollection.Cast<T>().ToArray();
+                ? MasterData.MusicCollection.Cast<T>().ToArray()
+                : MasterData.SFXCollection.Cast<T>().ToArray();
         }
     }
 }

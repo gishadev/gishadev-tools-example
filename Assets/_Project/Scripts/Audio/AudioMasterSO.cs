@@ -6,6 +6,7 @@ namespace gishadev.tools.Audio
     public class AudioMasterSO : ScriptableObject
     {
         [field: SerializeField] public float FadeTransitionTime { get; private set; }
+        [field: SerializeField] public bool MusicAutoSequencing { get; private set; }
         [field: SerializeField] public MusicData[] MusicCollection { get; private set; }
         [field: SerializeField] public SFXData[] SFXCollection { get; private set; }
     }
