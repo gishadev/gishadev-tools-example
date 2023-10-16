@@ -1,0 +1,48 @@
+using System.Linq;
+using UnityEngine;
+
+namespace gishadev.tools.Core
+{
+    [System.Serializable]
+    public abstract class PoolObject : IPoolObject 
+    {
+        [field: SerializeField] public string Name { get; private set; }
+        [field: SerializeField] public GameObject[] Prefabs { get; private set; }
+        public int[] InstanceIds => Prefabs.Select(x => x.GetInstanceID()).ToArray();
+
+        public PoolObject(GameObject prefab)
+        {
+            Prefabs = new GameObject[1];
+            Prefabs[0] = prefab;
+
+            Name = Prefabs[0].name;
+        }
+
+        public GameObject GetPrefab()
+        {
+            return Prefabs.Length > 1 ? Prefabs[Random.Range(0, Prefabs.Length)] : Prefabs[0];
+        }
+    }
+
+    public class SFXPoolObject : PoolObject
+    {
+        public SFXPoolObject(GameObject prefab) : base(prefab)
+        {
+        }
+
+        public SFXPoolObject() : base(null)
+        {
+        }
+    }
+
+    public class VFXPoolObject : PoolObject
+    {
+        public VFXPoolObject(GameObject prefab) : base(prefab)
+        {
+        }
+        
+        public VFXPoolObject() : base(null)
+        {
+        }
+    }
+}

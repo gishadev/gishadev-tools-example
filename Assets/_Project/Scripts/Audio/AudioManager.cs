@@ -23,11 +23,11 @@ namespace gishadev.tools.Audio
                 return _current;
             }
         }
+        private static AudioManager _current;
 
         public delegate void DelayedDelegate();
         public AudioMasterSO MasterData => _masterData;
 
-        private static AudioManager _current;
 
         private AudioMasterSO _masterData;
         private bool _isInitialized;

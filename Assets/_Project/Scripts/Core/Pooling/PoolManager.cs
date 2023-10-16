@@ -1,0 +1,126 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using Object = UnityEngine.Object;
+using Random = System.Random;
+
+namespace gishadev.tools.Core
+{
+    public abstract class PoolManager<T> : MonoBehaviour where T : PoolObject, new()
+    {
+        [SerializeField] private PoolDataSO poolDataSo;
+
+        private Dictionary<IPoolObject, List<GameObject>> _objectsByPoolObject = new();
+        private Dictionary<IPoolObject, Transform> _parentByPoolObject = new();
+
+        protected abstract Transform Parent { get; set; }
+
+        protected virtual void Awake()
+        {
+            _objectsByPoolObject = new Dictionary<IPoolObject, List<GameObject>>();
+            _parentByPoolObject = new Dictionary<IPoolObject, Transform>();
+
+            InitializePools(poolDataSo.SFXPoolObjects.Cast<PoolObject>().ToList());
+            InitializePools(poolDataSo.VFXPoolObjects.Cast<PoolObject>().ToList());
+        }
+
+        protected bool TryInstantiate(string name, out GameObject emittedObj)
+        {
+            var collection = typeof(T) == typeof(SFXPoolObject)
+                ? poolDataSo.SFXPoolObjects.Cast<T>().ToArray()
+                : poolDataSo.VFXPoolObjects.Cast<T>().ToArray();
+            
+            var poolObj = collection.FirstOrDefault(x => x.Name == name);
+            var prefab = poolObj.GetPrefab();
+            emittedObj = null;
+
+            if (poolObj.Equals(null))
+                return false;
+
+            var po = GetOrCreatePoolObject(prefab, collection.ToList());
+            if (_objectsByPoolObject.TryGetValue(po, out var sceneObjectsList))
+            {
+                if (sceneObjectsList.Any(x => !x.activeInHierarchy))
+                {
+                    emittedObj = ActivateAvailableObject(sceneObjectsList);
+                    return true;
+                }
+            }
+            else
+            {
+                _objectsByPoolObject.Add(po, new List<GameObject>());
+                CreateObjectParent(po);
+            }
+
+            emittedObj = InstantiateNewObject(prefab, po);
+            return true;
+        }
+
+        private void InitializePools(List<PoolObject> poolObjects)
+        {
+            foreach (var po in poolObjects)
+            {
+                _objectsByPoolObject.Add(po, new List<GameObject>());
+                CreateObjectParent(po);
+            }
+        }
+
+        #region Object Instantiating
+
+        private GameObject InstantiateNewObject(GameObject prefab,
+            IPoolObject po)
+        {
+            Transform parent = _parentByPoolObject[po];
+
+            GameObject createdObject = Object.Instantiate(prefab, parent);
+            _objectsByPoolObject[po].Add(createdObject);
+
+            return createdObject;
+        }
+
+        private GameObject ActivateAvailableObject(List<GameObject> sceneObjectsList)
+        {
+            GameObject objectToActivate;
+            if (sceneObjectsList.Count > 1)
+            {
+                List<GameObject> unactiveObjects = sceneObjectsList.Where(x => !x.activeInHierarchy).ToList();
+                objectToActivate = unactiveObjects.ElementAtOrDefault(new Random().Next() % unactiveObjects.Count());
+            }
+            else
+                objectToActivate = sceneObjectsList.FirstOrDefault(x => !x.activeInHierarchy);
+
+            objectToActivate.SetActive(true);
+
+            return objectToActivate;
+        }
+
+        #endregion
+
+        private IPoolObject GetOrCreatePoolObject(GameObject prefab, List<T> poolCollection)
+        {
+            var prefabId = prefab.GetInstanceID();
+            var index = poolCollection.FindIndex(x => x.InstanceIds.Contains(prefabId));
+
+            if (index == -1)
+            {
+                var newPO = (T)Activator.CreateInstance(typeof(T), prefab);
+                poolCollection.Add(newPO);
+                index = poolCollection.Count - 1;
+
+                Debug.LogFormat($"New Pool Object was created with name {newPO.Name}");
+            }
+
+            return poolCollection[index];
+        }
+
+        private void CreateObjectParent(IPoolObject poKey)
+        {
+            var name = string.Format("pool_{0}", poKey.Name);
+            var parent = new GameObject(name);
+            parent.transform.SetParent(Parent);
+
+            _parentByPoolObject.Add(poKey, parent.transform);
+        }
+    }
+}
