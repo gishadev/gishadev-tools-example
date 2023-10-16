@@ -24,6 +24,7 @@ namespace gishadev.tools.Core
         }
     }
 
+    [System.Serializable]
     public class SFXPoolObject : PoolObject
     {
         public SFXPoolObject(GameObject prefab) : base(prefab)
@@ -35,6 +36,7 @@ namespace gishadev.tools.Core
         }
     }
 
+    [System.Serializable]
     public class VFXPoolObject : PoolObject
     {
         public VFXPoolObject(GameObject prefab) : base(prefab)

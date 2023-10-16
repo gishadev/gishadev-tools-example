@@ -9,27 +9,31 @@ namespace gishadev.tools.Core
 {
     public abstract class PoolManager<T> : MonoBehaviour where T : PoolObject, new()
     {
-        [SerializeField] private PoolDataSO poolDataSo;
-
+        public const string POOL_ASSET = "PoolDataSO";
+        
         private Dictionary<IPoolObject, List<GameObject>> _objectsByPoolObject = new();
         private Dictionary<IPoolObject, Transform> _parentByPoolObject = new();
 
         protected abstract Transform Parent { get; set; }
+        protected abstract List<T> PoolObjectsCollection { get; }
+
+        protected PoolDataSO PoolDataSO { get; private set; }
 
         protected virtual void Awake()
         {
+            PoolDataSO = Resources.Load<PoolDataSO>(POOL_ASSET);
+            
             _objectsByPoolObject = new Dictionary<IPoolObject, List<GameObject>>();
             _parentByPoolObject = new Dictionary<IPoolObject, Transform>();
 
-            InitializePools(poolDataSo.SFXPoolObjects.Cast<PoolObject>().ToList());
-            InitializePools(poolDataSo.VFXPoolObjects.Cast<PoolObject>().ToList());
+            InitializePools(PoolObjectsCollection);
         }
 
         protected bool TryInstantiate(string name, out GameObject emittedObj)
         {
             var collection = typeof(T) == typeof(SFXPoolObject)
-                ? poolDataSo.SFXPoolObjects.Cast<T>().ToArray()
-                : poolDataSo.VFXPoolObjects.Cast<T>().ToArray();
+                ? PoolDataSO.SFXPoolObjects.Cast<T>().ToArray()
+                : PoolDataSO.VFXPoolObjects.Cast<T>().ToArray();
             
             var poolObj = collection.FirstOrDefault(x => x.Name == name);
             var prefab = poolObj.GetPrefab();
@@ -57,7 +61,7 @@ namespace gishadev.tools.Core
             return true;
         }
 
-        private void InitializePools(List<PoolObject> poolObjects)
+        private void InitializePools(List<T> poolObjects)
         {
             foreach (var po in poolObjects)
             {
@@ -116,7 +120,7 @@ namespace gishadev.tools.Core
 
         private void CreateObjectParent(IPoolObject poKey)
         {
-            var name = string.Format("pool_{0}", poKey.Name);
+            var name = $"[{poKey.GetType().Name}_{poKey.Name}]";
             var parent = new GameObject(name);
             parent.transform.SetParent(Parent);
 

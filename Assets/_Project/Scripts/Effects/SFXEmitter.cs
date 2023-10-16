@@ -1,26 +1,29 @@
+using System.Collections.Generic;
+using Gisha.Effects.Audio;
 using gishadev.tools.Core;
 using UnityEngine;
 
 namespace gishadev.tools.Effects
 {
-    public class PoolEmitter : PoolManager<SFXPoolObject>, IPoolEmitter
+    public class SFXEmitter : PoolManager<SFXPoolObject>, IPoolEmitter
     {
-        public static PoolEmitter I
+        public static SFXEmitter I
         {
             get
             {
                 if (_current)
                     return _current;
 
-                _current = new GameObject("[SFXManager]").AddComponent<PoolEmitter>();
+                _current = new GameObject("[SFXManager]").AddComponent<SFXEmitter>();
                 DontDestroyOnLoad(_current.gameObject);
 
                 return _current;
             }
         }
-        private static PoolEmitter _current;
+        private static SFXEmitter _current;
 
         protected override Transform Parent { get; set; }
+        protected override List<SFXPoolObject> PoolObjectsCollection => PoolDataSO.SFXPoolObjects;
 
         protected override void Awake()
         {
@@ -35,6 +38,7 @@ namespace gishadev.tools.Effects
 
             obj.transform.position = position;
             obj.transform.rotation = rotation;
+            obj.AddComponent<DisableSFXOnComplete>();
 
             return obj;
         }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using gishadev.tools.Core;
 using UnityEngine;
 
@@ -21,6 +22,7 @@ namespace gishadev.tools.Effects
         private static VFXEmitter _current;
 
         protected override Transform Parent { get; set; }
+        protected override List<VFXPoolObject> PoolObjectsCollection => PoolDataSO.VFXPoolObjects;
 
         protected override void Awake()
         {
