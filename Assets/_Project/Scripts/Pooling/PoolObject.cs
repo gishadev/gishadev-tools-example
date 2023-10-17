@@ -1,7 +1,7 @@
 using System.Linq;
 using UnityEngine;
 
-namespace gishadev.tools.Core
+namespace gishadev.tools.Pooling
 {
     [System.Serializable]
     public abstract class PoolObject : IPoolObject 

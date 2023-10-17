@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace gishadev.tools.Core
+namespace gishadev.tools.Pooling
 {
     [CreateAssetMenu(fileName = "PoolData", menuName = "ScriptableObjects/PoolData")]
     public class PoolDataSO : ScriptableObject

@@ -5,7 +5,7 @@ using UnityEngine;
 using Object = UnityEngine.Object;
 using Random = System.Random;
 
-namespace gishadev.tools.Core
+namespace gishadev.tools.Pooling
 {
     public abstract class PoolManager<T> : MonoBehaviour where T : PoolObject, new()
     {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace gishadev.tools.Core
+namespace gishadev.tools.Pooling
 {
     public interface IPoolObject
     {
