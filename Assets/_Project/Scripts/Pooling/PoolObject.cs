@@ -18,6 +18,10 @@ namespace gishadev.tools.Pooling
             Name = Prefabs[0].name;
         }
 
+        protected PoolObject()
+        {
+        }
+
         public GameObject GetPrefab()
         {
             return Prefabs.Length > 1 ? Prefabs[Random.Range(0, Prefabs.Length)] : Prefabs[0];
@@ -31,7 +35,7 @@ namespace gishadev.tools.Pooling
         {
         }
 
-        public SFXPoolObject() : base(null)
+        public SFXPoolObject()
         {
         }
     }
@@ -43,7 +47,7 @@ namespace gishadev.tools.Pooling
         {
         }
         
-        public VFXPoolObject() : base(null)
+        public VFXPoolObject()
         {
         }
     }

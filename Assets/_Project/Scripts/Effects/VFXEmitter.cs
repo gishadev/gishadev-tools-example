@@ -14,7 +14,7 @@ namespace gishadev.tools.Effects
                 if (_current)
                     return _current;
 
-                _current = new GameObject("[VFXManager]").AddComponent<VFXEmitter>();
+                _current = new GameObject("[VFXEmitter]").AddComponent<VFXEmitter>();
                 DontDestroyOnLoad(_current.gameObject);
 
                 return _current;

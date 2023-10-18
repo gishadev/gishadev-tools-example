@@ -15,7 +15,7 @@ namespace gishadev.tools.Effects
                 if (_current)
                     return _current;
 
-                _current = new GameObject("[SFXManager]").AddComponent<SFXEmitter>();
+                _current = new GameObject("[SFXEmitter]").AddComponent<SFXEmitter>();
                 DontDestroyOnLoad(_current.gameObject);
 
                 return _current;
