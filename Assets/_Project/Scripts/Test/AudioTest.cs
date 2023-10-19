@@ -1,5 +1,4 @@
-﻿using System;
-using gishadev.tools.Audio;
+﻿using gishadev.tools.Audio;
 using UnityEngine;
 
 namespace gishadev.tools.Test

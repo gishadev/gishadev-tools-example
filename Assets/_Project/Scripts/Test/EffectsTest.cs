@@ -1,4 +1,3 @@
-using System;
 using gishadev.tools.Effects;
 using UnityEngine;
 
