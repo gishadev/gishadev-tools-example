@@ -57,16 +57,20 @@ namespace gishadev.tools.Audio
             Debug.Log($"I'm playing: {data.Name} of type {typeof(T)}");
         }
 
-        public void PlayAudio<T>(string name) where T : AudioData, new()
+        public void PlayAudio(MusicAudio enumEntry)
         {
             TryInit();
-
-            var audioCollection = GetAudioCollection<T>();
-
-            var index = Array.FindIndex(audioCollection, sfx => sfx.Name == name);
-            PlayAudio<T>(index);
+            var musicData = Array.Find(_masterData.MusicCollection, d => d.EnumIndex == (int)enumEntry);
+            PlayAudio<MusicData>(musicData.EnumIndex);
         }
-
+        
+        public void PlayAudio(SFXAudio enumEntry)
+        {
+            TryInit();
+            var sfxData = Array.Find(_masterData.SFXCollection, d => d.EnumIndex == (int)enumEntry);
+            PlayAudio<SFXData>(sfxData.EnumIndex);
+        }
+        
         #region Initialization
 
         private void Init()

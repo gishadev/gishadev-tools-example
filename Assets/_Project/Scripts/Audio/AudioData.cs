@@ -22,6 +22,8 @@ namespace gishadev.tools.Audio
         public AudioSource AudioSource { get; private set; }
         public virtual BaseAudioPlayer AudioPlayer { get; private set; }
 
+        public int EnumIndex { get; private set; }
+
         public virtual void InitAudioSource(AudioSource audioSource)
         {
             AudioSource = audioSource;
@@ -30,10 +32,15 @@ namespace gishadev.tools.Audio
             AudioSource.volume = InitialVolume;
             AudioSource.pitch = Pitch;
         }
-        
+
         public virtual void InitAudioPlayer(BaseAudioPlayer audioPlayer)
         {
             AudioPlayer = audioPlayer;
+        }
+
+        public void SetEnumIndex(int enumIndex)
+        {
+            EnumIndex = enumIndex;
         }
 
         public abstract void Play();
@@ -56,16 +63,16 @@ namespace gishadev.tools.Audio
             AudioSource.loop = IsLooping;
         }
 
-        public override void Play() => ((MusicPlayer)AudioPlayer).Play(this);
-        public override void Pause() => ((MusicPlayer)AudioPlayer).Pause(this);
-        public override void Stop() => ((MusicPlayer)AudioPlayer).Stop(this);
+        public override void Play() => ((MusicPlayer) AudioPlayer).Play(this);
+        public override void Pause() => ((MusicPlayer) AudioPlayer).Pause(this);
+        public override void Stop() => ((MusicPlayer) AudioPlayer).Stop(this);
     }
 
     [Serializable]
     public class SFXData : AudioData
     {
-        public override void Play() => ((SFXPlayer)AudioPlayer).Play(this);
-        public override void Pause() => ((SFXPlayer)AudioPlayer).Pause(this);
-        public override void Stop() => ((SFXPlayer)AudioPlayer).Stop(this);
+        public override void Play() => ((SFXPlayer) AudioPlayer).Play(this);
+        public override void Pause() => ((SFXPlayer) AudioPlayer).Pause(this);
+        public override void Stop() => ((SFXPlayer) AudioPlayer).Stop(this);
     }
 }

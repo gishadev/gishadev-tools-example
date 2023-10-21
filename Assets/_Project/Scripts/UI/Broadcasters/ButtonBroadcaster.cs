@@ -16,7 +16,7 @@ namespace gishadev.tools.UI
 
         public virtual void OnDisable()
         {
-            _inputOrigin.onClick.RemoveListener(() => RaiseEvent(newValue));
+            _inputOrigin.onClick.RemoveAllListeners();
         }
 
         public override void RaiseEvent(object input)
