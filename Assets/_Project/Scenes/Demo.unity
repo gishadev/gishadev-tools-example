@@ -792,12 +792,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e881e41ca4d3455fb9716949a57b80f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enumName: dadad
+  enumName: GenerateWhile
   enumEntries:
-  - Somethine
-  - key
-  - adv
-  - heea
+  - -@@-123_new_gun
+  - _new_13
+  - pub-lic
+  - ' 313 133 13'
+  - '@@@@'
 --- !u!1 &838274847
 GameObject:
   m_ObjectHideFlags: 0
