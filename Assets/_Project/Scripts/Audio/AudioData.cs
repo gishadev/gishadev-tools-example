@@ -1,11 +1,11 @@
 ﻿using System;
+using gishadev.tools.Core;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace gishadev.tools.Audio
 {
     [Serializable]
-    public abstract class AudioData
+    public abstract class AudioData : EnumEntryTarget
     {
         [field: Header("General")]
         [field: SerializeField]
@@ -22,8 +22,6 @@ namespace gishadev.tools.Audio
         public AudioSource AudioSource { get; private set; }
         public virtual BaseAudioPlayer AudioPlayer { get; private set; }
 
-        public int EnumIndex { get; private set; }
-
         public virtual void InitAudioSource(AudioSource audioSource)
         {
             AudioSource = audioSource;
@@ -38,10 +36,6 @@ namespace gishadev.tools.Audio
             AudioPlayer = audioPlayer;
         }
 
-        public void SetEnumIndex(int enumIndex)
-        {
-            EnumIndex = enumIndex;
-        }
 
         public abstract void Play();
         public abstract void Pause();

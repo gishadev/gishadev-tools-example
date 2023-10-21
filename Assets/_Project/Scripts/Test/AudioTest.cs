@@ -7,17 +7,17 @@ namespace gishadev.tools.Test
     {
         private void Awake()
         {
-            AudioManager.I.PlayAudio(MusicAudio.COOL_MUSIC);
-            AudioManager.I.PlayAudio(SFXAudio.SHOOT);
+            AudioManager.I.PlayAudio(MusicAudioEnum.COOL_MUSIC);
+            AudioManager.I.PlayAudio(SFXAudioEnum.SHOOT);
         }
 
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.N))
-                AudioManager.I.PlayAudio(MusicAudio.COOL_MUSIC2);
+                AudioManager.I.PlayAudio(MusicAudioEnum.COOL_MUSIC2);
 
             if (Input.GetMouseButtonDown(0))
-                AudioManager.I.PlayAudio(SFXAudio.BEEP);
+                AudioManager.I.PlayAudio(SFXAudioEnum.BEEP);
         }
     }
 }

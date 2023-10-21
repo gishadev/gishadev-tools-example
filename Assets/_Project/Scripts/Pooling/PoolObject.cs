@@ -1,10 +1,11 @@
 using System.Linq;
+using gishadev.tools.Core;
 using UnityEngine;
 
 namespace gishadev.tools.Pooling
 {
     [System.Serializable]
-    public abstract class PoolObject : IPoolObject 
+    public abstract class PoolObject : EnumEntryTarget, IPoolObject 
     {
         [field: SerializeField] public string Name { get; private set; }
         [field: SerializeField] public GameObject[] Prefabs { get; private set; }

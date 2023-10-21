@@ -23,9 +23,11 @@ namespace gishadev.tools.Audio
                 return _current;
             }
         }
+
         private static AudioManager _current;
 
         public delegate void DelayedDelegate();
+
         public AudioMasterSO MasterData => _masterData;
 
 
@@ -57,20 +59,9 @@ namespace gishadev.tools.Audio
             Debug.Log($"I'm playing: {data.Name} of type {typeof(T)}");
         }
 
-        public void PlayAudio(MusicAudio enumEntry)
-        {
-            TryInit();
-            var musicData = Array.Find(_masterData.MusicCollection, d => d.EnumIndex == (int)enumEntry);
-            PlayAudio<MusicData>(musicData.EnumIndex);
-        }
-        
-        public void PlayAudio(SFXAudio enumEntry)
-        {
-            TryInit();
-            var sfxData = Array.Find(_masterData.SFXCollection, d => d.EnumIndex == (int)enumEntry);
-            PlayAudio<SFXData>(sfxData.EnumIndex);
-        }
-        
+        public void PlayAudio(MusicAudioEnum enumEntry) => PlayAudio<MusicData>((int) enumEntry);
+        public void PlayAudio(SFXAudioEnum enumEntry) => PlayAudio<SFXData>((int) enumEntry);
+
         #region Initialization
 
         private void Init()

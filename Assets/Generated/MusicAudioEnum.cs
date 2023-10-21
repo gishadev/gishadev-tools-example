@@ -1,4 +1,4 @@
-public enum MusicAudio
+public enum MusicAudioEnum
 {
 	COOL_MUSIC,
 	COOL_MUSIC2

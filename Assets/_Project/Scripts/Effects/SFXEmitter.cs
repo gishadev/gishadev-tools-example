@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Gisha.Effects.Audio;
 using gishadev.tools.Pooling;
-using gishadev.tools.Core;
 using UnityEngine;
 
 namespace gishadev.tools.Effects
@@ -21,6 +20,7 @@ namespace gishadev.tools.Effects
                 return _current;
             }
         }
+
         private static SFXEmitter _current;
 
         protected override Transform Parent { get; set; }
@@ -32,9 +32,9 @@ namespace gishadev.tools.Effects
             Parent = transform;
         }
 
-        public GameObject EmitAt(string effectName, Vector3 position, Quaternion rotation)
+        public GameObject EmitAt(int index, Vector3 position, Quaternion rotation)
         {
-            if (!TryInstantiate(effectName, out var obj))
+            if (!TryInstantiate(index, out var obj))
                 return null;
 
             obj.transform.position = position;
@@ -43,5 +43,8 @@ namespace gishadev.tools.Effects
 
             return obj;
         }
+
+        public GameObject EmitAt(SoundEffectsEnum enumEntry, Vector3 position, Quaternion rotation) =>
+            EmitAt((int) enumEntry, position, rotation);
     }
 }

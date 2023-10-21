@@ -29,13 +29,13 @@ namespace gishadev.tools.Pooling
             InitializePools(PoolObjectsCollection);
         }
 
-        protected bool TryInstantiate(string name, out GameObject emittedObj)
+        protected bool TryInstantiate(int index, out GameObject emittedObj)
         {
             var collection = typeof(T) == typeof(SFXPoolObject)
                 ? PoolDataSO.SFXPoolObjects.Cast<T>().ToArray()
                 : PoolDataSO.VFXPoolObjects.Cast<T>().ToArray();
             
-            var poolObj = collection.FirstOrDefault(x => x.Name == name);
+            var poolObj = collection[index];
             var prefab = poolObj.GetPrefab();
             emittedObj = null;
 
