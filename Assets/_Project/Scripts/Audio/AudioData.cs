@@ -5,7 +5,7 @@ using UnityEngine;
 namespace gishadev.tools.Audio
 {
     [Serializable]
-    public abstract class AudioData : EnumEntryTarget
+    public abstract class AudioData : EnumEntryTarget, IDropdownTargetData
     {
         [field: Header("General")] [field: SerializeField] public string Name { get; private set; }
         [field: SerializeField, Tooltip("Variations of Audio")] public AudioClip[] AudioClips { get; private set; }

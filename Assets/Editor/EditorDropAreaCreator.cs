@@ -5,11 +5,16 @@ using UnityEngine;
 
 namespace gishadev.tools.editor
 {
+    /// <summary>
+    /// Simple creator of dropdown areas for fast fill.
+    /// </summary>
+    /// <typeparam name="T">Data, which will be filled</typeparam>
+    /// <typeparam name="U">Input object</typeparam>
     public static class EditorDropAreaCreator<T, U> 
-        where T : EnumEntryTarget, new()
+        where T : IDropdownTargetData, new()
         where U : class
     {
-        public static void Create(ScriptableObjectEnumsGenerator SOEnumsGenerator,
+        public static void Create(IDropdownHolder dropdownHolder,
             IEnumerable<T> targetCollection)
         {
             Event evt = Event.current;
@@ -32,7 +37,7 @@ namespace gishadev.tools.editor
                         foreach (Object draggedObject in DragAndDrop.objectReferences)
                         {
                             if (draggedObject is U importKeyObject)
-                                SOEnumsGenerator.OnDragNDropped<T, U>(importKeyObject, targetCollection);
+                                dropdownHolder.OnDragNDropped(importKeyObject, targetCollection);
                         }
                     }
 

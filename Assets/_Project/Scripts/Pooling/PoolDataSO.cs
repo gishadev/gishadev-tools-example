@@ -6,7 +6,7 @@ using UnityEngine;
 namespace gishadev.tools.Pooling
 {
     [CreateAssetMenu(fileName = "PoolData", menuName = "ScriptableObjects/PoolData")]
-    public class PoolDataSO : ScriptableObjectEnumsGenerator
+    public class PoolDataSO : ScriptableObjectEnumsGenerator, IDropdownHolder
     {
         [field: SerializeField] public SFXPoolObject[] SFXPoolObjects { get; private set; }
         [field: SerializeField] public VFXPoolObject[] VFXPoolObjects { get; private set; }
@@ -21,7 +21,10 @@ namespace gishadev.tools.Pooling
             InitEnumForCollection(VFXPoolObjects, VFXPoolObjects.Select(x => x.Name), VFX_ENUM_NAME);
         }
 
-        public override void OnDragNDropped<T, U>(U importKeyObject, IEnumerable<T> targetCollection)
+
+        public void OnDragNDropped<T, U>(U importKeyObject, IEnumerable<T> targetCollection)
+            where T : IDropdownTargetData, new() 
+            where U : class
         {
             var tempCollection = targetCollection.ToList();
             var newData = InstanceCreator.CreateInstanceWithArgs<T>(importKeyObject);

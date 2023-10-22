@@ -9,10 +9,6 @@ namespace gishadev.tools.Core
     {
         public abstract void OnCollectionChanged();
 
-        public abstract void OnDragNDropped<T, U>(U importKeyObject, IEnumerable<T> targetCollection)
-            where T : EnumEntryTarget, new()
-            where U : class;
-
         protected void InitEnumForCollection(IEnumerable<EnumEntryTarget> collection,
             IEnumerable<string> enumEntriesNames,
             string enumName)

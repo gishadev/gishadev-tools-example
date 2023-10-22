@@ -15,15 +15,14 @@ MonoBehaviour:
   <FadeTransitionTime>k__BackingField: 2
   <MusicAutoSequencing>k__BackingField: 1
   <MusicCollection>k__BackingField:
-  - <Name>k__BackingField: cool_music
+  - <Name>k__BackingField: music_1
     <AudioClips>k__BackingField:
     - {fileID: 8300000, guid: cc0b1d3395eb9a441bdc1cdf4775f9e3, type: 3}
-    - {fileID: 8300000, guid: 6e2a94b5493b0344c885ecf256a803b6, type: 3}
     <InitialVolume>k__BackingField: 1
     <Pitch>k__BackingField: 1
     <IsLooping>k__BackingField: 0
     <IsFade>k__BackingField: 1
-  - <Name>k__BackingField: cool_music2
+  - <Name>k__BackingField: music_2
     <AudioClips>k__BackingField:
     - {fileID: 8300000, guid: edf4dd7ff3eeaf24bb000e1d9f2943d7, type: 3}
     <InitialVolume>k__BackingField: 1
@@ -31,16 +30,12 @@ MonoBehaviour:
     <IsLooping>k__BackingField: 0
     <IsFade>k__BackingField: 1
   <SFXCollection>k__BackingField:
-  - <Name>k__BackingField: beep
+  - <Name>k__BackingField: click
     <AudioClips>k__BackingField:
+    - {fileID: 8300000, guid: 9d2744c7e734a894a8b05a0a7d0cafa6, type: 3}
+    - {fileID: 8300000, guid: 85f0ac4e2af50224298a42321f28899c, type: 3}
     - {fileID: 8300000, guid: 1f7874c0114806f44a48e374552ff9b2, type: 3}
     - {fileID: 8300000, guid: f74bd7df5e1d979409f618b97c7adfdb, type: 3}
-    <InitialVolume>k__BackingField: 1
-    <Pitch>k__BackingField: 1
-  - <Name>k__BackingField: shoot
-    <AudioClips>k__BackingField:
-    - {fileID: 8300000, guid: fb401821f2904b34dbdbaefcad65925a, type: 3}
-    - {fileID: 8300000, guid: dabdfba9bdf66d541a402d32481231bc, type: 3}
-    - {fileID: 8300000, guid: cc80ce48312ea5f46bfed7b962cf30f8, type: 3}
+    - {fileID: 8300000, guid: fc2851aada73bac47a4dae9109391394, type: 3}
     <InitialVolume>k__BackingField: 1
     <Pitch>k__BackingField: 1

@@ -5,7 +5,7 @@ using UnityEngine;
 namespace gishadev.tools.Pooling
 {
     [System.Serializable]
-    public abstract class PoolObject : EnumEntryTarget, IPoolObject 
+    public abstract class PoolObject : EnumEntryTarget, IPoolObject, IDropdownTargetData
     {
         [field: SerializeField] public string Name { get; private set; }
         [field: SerializeField] public GameObject[] Prefabs { get; private set; }

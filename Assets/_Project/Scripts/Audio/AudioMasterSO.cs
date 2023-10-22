@@ -8,7 +8,7 @@ using UnityEngine;
 namespace gishadev.tools.Audio
 {
     [CreateAssetMenu(fileName = "AudioMasterSO", menuName = "ScriptableObjects/AudioMasterSO")]
-    public class AudioMasterSO : ScriptableObjectEnumsGenerator
+    public class AudioMasterSO : ScriptableObjectEnumsGenerator, IDropdownHolder
     {
         [field: SerializeField] public float FadeTransitionTime { get; private set; }
         [field: SerializeField] public bool MusicAutoSequencing { get; private set; }
@@ -24,8 +24,10 @@ namespace gishadev.tools.Audio
             InitEnumForCollection(SFXCollection, SFXCollection.Select(x => x.Name), SFX_ENUM_NAME);
             InitEnumForCollection(MusicCollection, MusicCollection.Select(x => x.Name), MUSIC_ENUM_NAME);
         }
-
-        public override void OnDragNDropped<T, U>(U importKeyObject, IEnumerable<T> targetCollection)
+        
+        public void OnDragNDropped<T, U>(U importKeyObject, IEnumerable<T> targetCollection)
+            where T : IDropdownTargetData, new()
+            where U : class
         {
             var tempCollection = targetCollection.ToList();
             var newData = InstanceCreator.CreateInstanceWithArgs<T>(importKeyObject);
