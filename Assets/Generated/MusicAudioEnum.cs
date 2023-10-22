@@ -1,5 +1,5 @@
 public enum MusicAudioEnum
 {
-	COOL_MUSIC,
-	COOL_MUSIC2
+	MUSIC_1,
+	MUSIC_2
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Gisha.Effects.Audio;
 using gishadev.tools.Pooling;
 using UnityEngine;
@@ -24,7 +25,7 @@ namespace gishadev.tools.Effects
         private static SFXEmitter _current;
 
         protected override Transform Parent { get; set; }
-        protected override List<SFXPoolObject> PoolObjectsCollection => PoolDataSO.SFXPoolObjects;
+        protected override List<SFXPoolObject> PoolObjectsCollection => PoolDataSO.SFXPoolObjects.ToList();
 
         protected override void Awake()
         {

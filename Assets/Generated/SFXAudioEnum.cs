@@ -1,5 +1,4 @@
 public enum SFXAudioEnum
 {
-	BEEP,
-	SHOOT
+	CLICK
 }

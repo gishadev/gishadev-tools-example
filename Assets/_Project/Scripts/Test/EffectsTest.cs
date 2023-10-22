@@ -12,8 +12,8 @@ namespace gishadev.tools.Test
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(ray, out var hitInfo))
                 {
-                    VFXEmitter.I.EmitAt(VisualEffectsEnum.BOOM, hitInfo.point, Quaternion.identity);
-                    SFXEmitter.I.EmitAt(SoundEffectsEnum.BOOM, hitInfo.point, Quaternion.identity);
+                    VFXEmitter.I.EmitAt(VisualEffectsEnum.EXPLOSION, hitInfo.point, Quaternion.identity);
+                    SFXEmitter.I.EmitAt(SoundEffectsEnum.EXPLOSION, hitInfo.point, Quaternion.identity);
                 }
             }
         }

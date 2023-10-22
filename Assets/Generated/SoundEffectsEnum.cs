@@ -1,4 +1,4 @@
 public enum SoundEffectsEnum
 {
-	BOOM
+	EXPLOSION
 }

@@ -8,8 +8,8 @@ namespace gishadev.tools.Pooling
     [CreateAssetMenu(fileName = "PoolData", menuName = "ScriptableObjects/PoolData")]
     public class PoolDataSO : ScriptableObjectEnumsGenerator
     {
-        [field: SerializeField] public List<SFXPoolObject> SFXPoolObjects { get; private set; } = new();
-        [field: SerializeField] public List<VFXPoolObject> VFXPoolObjects { get; private set; } = new();
+        [field: SerializeField] public SFXPoolObject[] SFXPoolObjects { get; private set; }
+        [field: SerializeField] public VFXPoolObject[] VFXPoolObjects { get; private set; }
 
         private const string SFX_ENUM_NAME = "SoundEffectsEnum";
         private const string VFX_ENUM_NAME = "VisualEffectsEnum";
@@ -21,9 +21,16 @@ namespace gishadev.tools.Pooling
             InitEnumForCollection(VFXPoolObjects, VFXPoolObjects.Select(x => x.Name), VFX_ENUM_NAME);
         }
 
-        public void OnDragNDropped<T>(T data)
+        public override void OnDragNDropped<T, U>(U importKeyObject, IEnumerable<T> targetCollection)
         {
-            
+            var tempCollection = targetCollection.ToList();
+            var newData = InstanceCreator.CreateInstanceWithArgs<T>(importKeyObject);
+            tempCollection.Add(newData);
+
+            if (typeof(T) == typeof(SFXPoolObject))
+                SFXPoolObjects = tempCollection.Cast<SFXPoolObject>().ToArray();
+            if (typeof(T) == typeof(VFXPoolObject))
+                VFXPoolObjects = tempCollection.Cast<VFXPoolObject>().ToArray();
         }
     }
 }

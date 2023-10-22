@@ -25,15 +25,15 @@ namespace gishadev.tools.Audio
             InitEnumForCollection(MusicCollection, MusicCollection.Select(x => x.Name), MUSIC_ENUM_NAME);
         }
 
-        public void OnDragNDropped<T>(AudioClip audioClip, IEnumerable<T> targetCollection) where T : AudioData, new()
+        public override void OnDragNDropped<T, U>(U importKeyObject, IEnumerable<T> targetCollection)
         {
             var tempCollection = targetCollection.ToList();
-            var newData = InstanceCreator.CreateInstanceWithArgs<T>(audioClip);
+            var newData = InstanceCreator.CreateInstanceWithArgs<T>(importKeyObject);
             tempCollection.Add(newData);
-            
-            if (typeof(T) == typeof(SFXData)) 
+
+            if (typeof(T) == typeof(SFXData))
                 SFXCollection = tempCollection.Cast<SFXData>().ToArray();
-            if (typeof(T) == typeof(MusicData)) 
+            if (typeof(T) == typeof(MusicData))
                 MusicCollection = tempCollection.Cast<MusicData>().ToArray();
         }
     }
