@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using gishadev.tools.Core;
 using UnityEngine;
 
@@ -20,6 +23,18 @@ namespace gishadev.tools.Audio
         {
             InitEnumForCollection(SFXCollection, SFXCollection.Select(x => x.Name), SFX_ENUM_NAME);
             InitEnumForCollection(MusicCollection, MusicCollection.Select(x => x.Name), MUSIC_ENUM_NAME);
+        }
+
+        public void OnDragNDropped<T>(AudioClip audioClip, IEnumerable<T> targetCollection) where T : AudioData, new()
+        {
+            var tempCollection = targetCollection.ToList();
+            var newData = InstanceCreator.CreateInstanceWithArgs<T>(audioClip);
+            tempCollection.Add(newData);
+            
+            if (typeof(T) == typeof(SFXData)) 
+                SFXCollection = tempCollection.Cast<SFXData>().ToArray();
+            if (typeof(T) == typeof(MusicData)) 
+                MusicCollection = tempCollection.Cast<MusicData>().ToArray();
         }
     }
 }

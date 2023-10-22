@@ -7,20 +7,32 @@ namespace gishadev.tools.Audio
     [Serializable]
     public abstract class AudioData : EnumEntryTarget
     {
-        [field: Header("General")]
-        [field: SerializeField]
-        public string Name { get; private set; }
-
-        [field: SerializeField, Tooltip("Variations of Audio")]
-        public AudioClip[] AudioClips { get; private set; }
-
+        [field: Header("General")] [field: SerializeField] public string Name { get; private set; }
+        [field: SerializeField, Tooltip("Variations of Audio")] public AudioClip[] AudioClips { get; private set; }
         [field: SerializeField, Range(0f, 1f)] public float InitialVolume { get; private set; }
-
-        [field: SerializeField, Range(0.3f, 3f)]
-        public float Pitch { get; private set; }
+        [field: SerializeField, Range(0.3f, 3f)] public float Pitch { get; private set; }
 
         public AudioSource AudioSource { get; private set; }
         public virtual BaseAudioPlayer AudioPlayer { get; private set; }
+
+        protected AudioData(AudioClip audioClip)
+        {
+            if (audioClip == null)
+            {
+                Debug.LogError("NULL audio clips provided.");
+                return;
+            }
+            
+            AudioClips = new[]{audioClip};
+            
+            Name = audioClip.name;
+            InitialVolume = 1f;
+            Pitch = 1f;
+        }
+
+        protected AudioData()
+        {
+        }
 
         public virtual void InitAudioSource(AudioSource audioSource)
         {
@@ -60,6 +72,16 @@ namespace gishadev.tools.Audio
         public override void Play() => ((MusicPlayer) AudioPlayer).Play(this);
         public override void Pause() => ((MusicPlayer) AudioPlayer).Pause(this);
         public override void Stop() => ((MusicPlayer) AudioPlayer).Stop(this);
+
+        public MusicData(AudioClip audioClip) : base(audioClip)
+        {
+            IsFade = true;
+            IsLooping = false;
+        }
+
+        public MusicData()
+        {
+        }
     }
 
     [Serializable]
@@ -68,5 +90,13 @@ namespace gishadev.tools.Audio
         public override void Play() => ((SFXPlayer) AudioPlayer).Play(this);
         public override void Pause() => ((SFXPlayer) AudioPlayer).Pause(this);
         public override void Stop() => ((SFXPlayer) AudioPlayer).Stop(this);
+        
+        public SFXData(AudioClip audioClip) : base(audioClip)
+        {
+        }
+
+        public SFXData()
+        {
+        }
     }
 }

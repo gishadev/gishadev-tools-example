@@ -20,5 +20,10 @@ namespace gishadev.tools.Pooling
             InitEnumForCollection(SFXPoolObjects, SFXPoolObjects.Select(x => x.Name), SFX_ENUM_NAME);
             InitEnumForCollection(VFXPoolObjects, VFXPoolObjects.Select(x => x.Name), VFX_ENUM_NAME);
         }
+
+        public void OnDragNDropped<T>(T data)
+        {
+            
+        }
     }
 }
