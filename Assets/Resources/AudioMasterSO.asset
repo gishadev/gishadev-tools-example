@@ -17,6 +17,7 @@ MonoBehaviour:
   <MusicCollection>k__BackingField:
   - <Name>k__BackingField: music_1
     <AudioClips>k__BackingField:
+    - {fileID: 8300000, guid: edf4dd7ff3eeaf24bb000e1d9f2943d7, type: 3}
     - {fileID: 8300000, guid: cc0b1d3395eb9a441bdc1cdf4775f9e3, type: 3}
     <InitialVolume>k__BackingField: 1
     <Pitch>k__BackingField: 1

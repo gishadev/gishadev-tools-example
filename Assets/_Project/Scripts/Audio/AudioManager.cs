@@ -28,12 +28,13 @@ namespace gishadev.tools.Audio
 
         public delegate void DelayedDelegate();
 
+        public event Action<AudioData> AudioStarted;
         public AudioMasterSO MasterData => _masterData;
 
 
         private AudioMasterSO _masterData;
         private bool _isInitialized;
-
+        
 
         private void Awake()
         {
@@ -55,6 +56,8 @@ namespace gishadev.tools.Audio
 
             var data = audioCollection.ToArray()[index];
             data.Play();
+            
+            AudioStarted?.Invoke(data);
 
             Debug.Log($"I'm playing: {data.Name} of type {typeof(T)}");
         }
