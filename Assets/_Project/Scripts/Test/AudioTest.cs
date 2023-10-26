@@ -5,7 +5,7 @@ namespace gishadev.tools.Test
 {
     public class AudioTest : MonoBehaviour
     {
-        private void Awake()
+        private void Start()
         {
             AudioManager.I.PlayAudio(MusicAudioEnum.MUSIC_1);
         }
