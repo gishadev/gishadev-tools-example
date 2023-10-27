@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -70,10 +71,14 @@ namespace gishadev.tools.UI
 
         public void PopPage()
         {
+            if (_pageStack.Count == 0)
+                return;
+
             if (_pageStack.Count > 1 || zeroPagesAllowed)
             {
                 Page page = _pageStack.Pop();
                 page.Exit();
+
 
                 // Page newCurrentPage = _pageStack.Peek();
                 // if (newCurrentPage.ExitOnNewPagePush)
