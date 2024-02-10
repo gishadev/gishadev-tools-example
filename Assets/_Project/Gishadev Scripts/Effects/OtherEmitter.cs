@@ -5,26 +5,26 @@ using UnityEngine;
 
 namespace gishadev.tools.Effects
 {
-    public class VFXEmitter : PoolManager<VFXPoolObject>, IPoolEmitter
+    public class OtherEmitter : PoolManager<OtherPoolObject>, IPoolEmitter
     {
-        public static VFXEmitter I
+        public static OtherEmitter I
         {
             get
             {
                 if (_current)
                     return _current;
 
-                _current = new GameObject("[VFXEmitter]").AddComponent<VFXEmitter>();
+                _current = new GameObject("[OtherEmitter]").AddComponent<OtherEmitter>();
                 DontDestroyOnLoad(_current.gameObject);
-                
+
                 return _current;
             }
         }
 
-        private static VFXEmitter _current;
+        private static OtherEmitter _current;
 
         protected override Transform Parent => transform;
-        protected override List<VFXPoolObject> PoolObjectsCollection => PoolDataSO.VFXPoolObjects.ToList();
+        protected override List<OtherPoolObject> PoolObjectsCollection => PoolDataSO.OtherPoolObjects.ToList();
 
         public GameObject EmitAt(int index, Vector3 position, Quaternion rotation)
         {
@@ -37,7 +37,9 @@ namespace gishadev.tools.Effects
             return obj;
         }
 
-        public GameObject EmitAt(VisualEffectsEnum enumEntry, Vector3 position, Quaternion rotation) =>
+        public GameObject EmitAt(OtherPoolEnum enumEntry, Vector3 position, Quaternion rotation) =>
             EmitAt((int) enumEntry, position, rotation);
+
+        public GameObject GetPrefab(OtherPoolEnum enumEntry) => PoolDataSO.OtherPoolObjects[(int)enumEntry].GetPrefab();
     }
 }

@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEditor;
@@ -6,6 +7,7 @@ using UnityEngine;
 
 namespace gishadev.tools.Generative
 {
+#if UNITY_EDITOR
     public static class EnumGenerator
     {
         public static void GenerateEnumClass(string enumName, string[] enumEntries)
@@ -16,6 +18,7 @@ namespace gishadev.tools.Generative
             str.AppendFormat("public enum {0}", enumName);
             str.AppendLine();
             str.AppendLine("{");
+
             for (var i = 0; i < enumEntries.Length; i++)
             {
                 str.AppendFormat("\t{0}", ValidateEnumString(enumEntries[i]));
@@ -57,4 +60,5 @@ namespace gishadev.tools.Generative
             return result;
         }
     }
+#endif
 }
