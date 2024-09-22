@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Zenject;
+using Object = UnityEngine.Object;
 
 namespace gishadev.tools.Audio
 {
@@ -21,17 +23,23 @@ namespace gishadev.tools.Audio
         private float _musicVolumePercentage = 1f;
         private float _sfxVolumePercentage = 1f;
 
-        private CancellationTokenSource _delayFuncCTS;
+        private CancellationTokenSource _delayFuncCts;
+        private CancellationTokenSource _cts;
 
         public AudioMasterSO AudioMasterData => _audioMasterData;
 
         public void Initialize()
         {
             Init();
+            _delayFuncCts = new CancellationTokenSource();
+            _cts = new CancellationTokenSource();
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
         public void Dispose()
         {
+            _cts.Cancel();
+            SceneManager.sceneLoaded -= OnSceneLoaded;
         }
 
         public void SetSFXVolume(float volumePercent)
@@ -80,8 +88,10 @@ namespace gishadev.tools.Audio
 
         private void Init()
         {
-            _delayFuncCTS = new CancellationTokenSource();
             _audioParent = new GameObject("[Audio Parent]");
+            _cts.RegisterRaiseCancelOnDestroy(_audioParent);
+
+            Object.DontDestroyOnLoad(_audioParent);
             InitCollection(AudioMasterData.SFXCollection);
             InitCollection(AudioMasterData.MusicCollection);
         }
@@ -105,17 +115,18 @@ namespace gishadev.tools.Audio
 
         #endregion
 
+        // TODO: bugs with fades
         public async void FadeIn(AudioData audioData)
         {
             audioData.AudioSource.volume = 0f;
             var volume = audioData.AudioSource.volume;
 
             while (audioData.AudioSource.volume * _musicVolumePercentage <
-                   audioData.InitialVolume * _musicVolumePercentage)
+                   audioData.InitialVolume * _musicVolumePercentage && !_cts.IsCancellationRequested)
             {
                 volume += Time.deltaTime / AudioMasterData.FadeTransitionTime * _musicVolumePercentage;
                 audioData.AudioSource.volume = volume;
-                await UniTask.Yield();
+                await UniTask.Yield(cancellationToken: _cts.Token);
             }
         }
 
@@ -123,14 +134,17 @@ namespace gishadev.tools.Audio
         {
             var volume = audioData.AudioSource.volume;
 
-            while (audioData.AudioSource.volume * _musicVolumePercentage > 0)
+            while (audioData.AudioSource.volume * _musicVolumePercentage > float.Epsilon && !_cts.IsCancellationRequested)
             {
                 volume -= Time.deltaTime / AudioMasterData.FadeTransitionTime * _musicVolumePercentage;
                 audioData.AudioSource.volume = volume;
-                await UniTask.Yield();
+                await UniTask.Yield(cancellationToken: _cts.Token);
             }
 
-            if (audioData.AudioSource.volume == 0)
+            if (_cts.IsCancellationRequested)
+                return;
+            
+            if (audioData.AudioSource.volume <= float.Epsilon)
             {
                 audioData.AudioSource.Stop();
                 audioData.AudioSource.volume = audioData.InitialVolume * _musicVolumePercentage;
@@ -139,15 +153,17 @@ namespace gishadev.tools.Audio
 
         public async void DelayFunc(DelayedDelegate delayedDelegate, float delay)
         {
-            await UniTask.WaitForSeconds(delay, cancellationToken: _delayFuncCTS.Token);
-            if (!_delayFuncCTS.IsCancellationRequested)
+            var linkedCTS = CancellationTokenSource.CreateLinkedTokenSource(_delayFuncCts.Token, _cts.Token);
+
+            await UniTask.WaitForSeconds(delay, cancellationToken: linkedCTS.Token);
+            if (!linkedCTS.IsCancellationRequested)
                 delayedDelegate();
         }
 
         public void CancelDelayFunc()
         {
-            _delayFuncCTS.Cancel();
-            _delayFuncCTS = new CancellationTokenSource();
+            _delayFuncCts.Cancel();
+            _delayFuncCts = new CancellationTokenSource();
         }
 
         private T[] GetAudioCollection<T>() where T : AudioData, new()
@@ -155,6 +171,12 @@ namespace gishadev.tools.Audio
             return typeof(T) == typeof(MusicData)
                 ? AudioMasterData.MusicCollection.Cast<T>().ToArray()
                 : AudioMasterData.SFXCollection.Cast<T>().ToArray();
+        }
+
+        private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
+        {
+            _delayFuncCts = new CancellationTokenSource();
+            _cts = new CancellationTokenSource();
         }
     }
 }

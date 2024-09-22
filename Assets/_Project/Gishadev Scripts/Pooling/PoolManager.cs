@@ -12,7 +12,7 @@ namespace gishadev.tools.Pooling
     public abstract class PoolManager<T> : IInitializable, IDisposable where T : PoolObject, new()
     {
         [Inject] protected PoolDataSO PoolDataSO { get; }
-        
+
         private Dictionary<IPoolObject, List<GameObject>> _objectsByPoolObject = new();
         private Dictionary<IPoolObject, Transform> _parentByPoolObject = new();
 
@@ -21,6 +21,7 @@ namespace gishadev.tools.Pooling
 
         public virtual void Initialize()
         {
+            Object.DontDestroyOnLoad(Parent);
             _objectsByPoolObject = new Dictionary<IPoolObject, List<GameObject>>();
             _parentByPoolObject = new Dictionary<IPoolObject, Transform>();
 
