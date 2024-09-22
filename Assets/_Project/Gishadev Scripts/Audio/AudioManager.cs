@@ -1,47 +1,37 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
+using Zenject;
 
 namespace gishadev.tools.Audio
 {
-    public class AudioManager : MonoBehaviour
+    public class AudioManager : IAudioManager, IInitializable, IDisposable
     {
-        public const string AUDIO_MASTER_ASSET = "AudioMasterSO";
-
-        public static AudioManager I
-        {
-            get
-            {
-                if (_current)
-                    return _current;
-
-                _current = new GameObject("[AudioManager]").AddComponent<AudioManager>();
-                DontDestroyOnLoad(_current.gameObject);
-
-                return _current;
-            }
-        }
-
-        private static AudioManager _current;
+        [Inject] private AudioMasterSO _audioMasterData;
 
         public delegate void DelayedDelegate();
 
         public event Action<AudioData> AudioStarted;
-        public AudioMasterSO MasterData => _masterData;
 
-
-        private AudioMasterSO _masterData;
-        private bool _isInitialized;
+        private GameObject _audioParent;
 
         private float _musicVolumePercentage = 1f;
         private float _sfxVolumePercentage = 1f;
 
+        private CancellationTokenSource _delayFuncCTS;
 
-        private void Awake()
+        public AudioMasterSO AudioMasterData => _audioMasterData;
+
+        public void Initialize()
         {
-            TryInit();
+            Init();
+        }
+
+        public void Dispose()
+        {
         }
 
         public void SetSFXVolume(float volumePercent)
@@ -66,8 +56,6 @@ namespace gishadev.tools.Audio
 
         public void PlayAudio<T>(int index) where T : AudioData, new()
         {
-            TryInit();
-
             var audioCollection = GetAudioCollection<T>();
 
             if (index < 0 || index > audioCollection.Length - 1)
@@ -85,24 +73,17 @@ namespace gishadev.tools.Audio
             Debug.Log($"I'm playing: {data.Name} of type {typeof(T)}");
         }
 
-        public void PlayAudio(MusicAudioEnum enumEntry) => PlayAudio<MusicData>((int) enumEntry);
-        public void PlayAudio(SFXAudioEnum enumEntry) => PlayAudio<SFXData>((int) enumEntry);
+        public void PlayAudio(MusicAudioEnum enumEntry) => PlayAudio<MusicData>((int)enumEntry);
+        public void PlayAudio(SFXAudioEnum enumEntry) => PlayAudio<SFXData>((int)enumEntry);
 
         #region Initialization
 
         private void Init()
         {
-            _masterData = Resources.Load<AudioMasterSO>(AUDIO_MASTER_ASSET);
-            InitCollection(MasterData.SFXCollection);
-            InitCollection(MasterData.MusicCollection);
-
-            _isInitialized = true;
-        }
-
-        private void TryInit()
-        {
-            if (!_isInitialized)
-                Init();
+            _delayFuncCTS = new CancellationTokenSource();
+            _audioParent = new GameObject("[Audio Parent]");
+            InitCollection(AudioMasterData.SFXCollection);
+            InitCollection(AudioMasterData.MusicCollection);
         }
 
         private void InitCollection<T>(IEnumerable<T> collection) where T : AudioData, new()
@@ -114,7 +95,7 @@ namespace gishadev.tools.Audio
             foreach (var audio in collection)
             {
                 var child = new GameObject(audio.Name);
-                child.transform.SetParent(transform);
+                child.transform.SetParent(_audioParent.transform);
 
                 var audioSource = child.AddComponent<AudioSource>();
                 audio.InitAudioSource(audioSource);
@@ -124,45 +105,29 @@ namespace gishadev.tools.Audio
 
         #endregion
 
-
-        public void FadeIn(AudioData audioData)
-        {
-            StartCoroutine(FadeInRoutine(audioData));
-        }
-
-        public void FadeOut(AudioData audioData)
-        {
-            StartCoroutine(FadeOutRoutine(audioData));
-        }
-
-        public void DelayFunc(DelayedDelegate delayedDelegate, float delay)
-        {
-            StopCoroutine(nameof(DelayFuncRoutine));
-            StartCoroutine(DelayFuncRoutine(delayedDelegate, delay));
-        }
-
-        private IEnumerator FadeInRoutine(AudioData audioData)
+        public async void FadeIn(AudioData audioData)
         {
             audioData.AudioSource.volume = 0f;
             var volume = audioData.AudioSource.volume;
 
-            while (audioData.AudioSource.volume * _musicVolumePercentage < audioData.InitialVolume * _musicVolumePercentage)
+            while (audioData.AudioSource.volume * _musicVolumePercentage <
+                   audioData.InitialVolume * _musicVolumePercentage)
             {
-                volume += Time.deltaTime / MasterData.FadeTransitionTime * _musicVolumePercentage;
+                volume += Time.deltaTime / AudioMasterData.FadeTransitionTime * _musicVolumePercentage;
                 audioData.AudioSource.volume = volume;
-                yield return null;
+                await UniTask.Yield();
             }
         }
 
-        private IEnumerator FadeOutRoutine(AudioData audioData)
+        public async void FadeOut(AudioData audioData)
         {
             var volume = audioData.AudioSource.volume;
 
             while (audioData.AudioSource.volume * _musicVolumePercentage > 0)
             {
-                volume -= Time.deltaTime / MasterData.FadeTransitionTime * _musicVolumePercentage;
+                volume -= Time.deltaTime / AudioMasterData.FadeTransitionTime * _musicVolumePercentage;
                 audioData.AudioSource.volume = volume;
-                yield return null;
+                await UniTask.Yield();
             }
 
             if (audioData.AudioSource.volume == 0)
@@ -172,18 +137,24 @@ namespace gishadev.tools.Audio
             }
         }
 
-        private IEnumerator DelayFuncRoutine(DelayedDelegate delayedDelegate, float delay)
+        public async void DelayFunc(DelayedDelegate delayedDelegate, float delay)
         {
-            yield return new WaitForSeconds(delay);
-            delayedDelegate();
+            await UniTask.WaitForSeconds(delay, cancellationToken: _delayFuncCTS.Token);
+            if (!_delayFuncCTS.IsCancellationRequested)
+                delayedDelegate();
         }
 
+        public void CancelDelayFunc()
+        {
+            _delayFuncCTS.Cancel();
+            _delayFuncCTS = new CancellationTokenSource();
+        }
 
         private T[] GetAudioCollection<T>() where T : AudioData, new()
         {
             return typeof(T) == typeof(MusicData)
-                ? MasterData.MusicCollection.Cast<T>().ToArray()
-                : MasterData.SFXCollection.Cast<T>().ToArray();
+                ? AudioMasterData.MusicCollection.Cast<T>().ToArray()
+                : AudioMasterData.SFXCollection.Cast<T>().ToArray();
         }
     }
 }

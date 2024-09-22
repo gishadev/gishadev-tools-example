@@ -2,6 +2,7 @@ using System;
 using Cinemachine;
 using gishadev.tools.Audio;
 using UnityEngine;
+using Zenject;
 
 namespace gishadev.tools.Test
 {
@@ -14,6 +15,7 @@ namespace gishadev.tools.Test
         [SerializeField] private float effectMultiplier = 25f;
         [SerializeField] private AnimationCurve frequencyMultiplierCurve;
 
+        [Inject] private IAudioManager _audioManager;
 
         private CinemachineImpulseSource _impulseSource;
         private AudioSource _audioSource;
@@ -25,12 +27,12 @@ namespace gishadev.tools.Test
 
         private void OnEnable()
         {
-            AudioManager.I.AudioStarted += OnAudioStarted;
+            _audioManager.AudioStarted += OnAudioStarted;
         }
 
         private void OnDisable()
         {
-            AudioManager.I.AudioStarted -= OnAudioStarted;
+            _audioManager.AudioStarted -= OnAudioStarted;
         }
 
         private void Update()

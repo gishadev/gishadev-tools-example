@@ -1,22 +1,25 @@
 ﻿using gishadev.tools.Audio;
 using UnityEngine;
+using Zenject;
 
 namespace gishadev.tools.Test
 {
     public class AudioTest : MonoBehaviour
     {
+        [Inject] private IAudioManager _audioManager;
+        
         private void Start()
         {
-            AudioManager.I.PlayAudio(MusicAudioEnum.MUSIC_1);
+            _audioManager.PlayAudio(MusicAudioEnum.MUSIC_1);
         }
 
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.N))
-                AudioManager.I.PlayAudio(MusicAudioEnum.MUSIC_2);
+                _audioManager.PlayAudio(MusicAudioEnum.MUSIC_2);
 
             if (Input.GetMouseButtonDown(0))
-                AudioManager.I.PlayAudio(SFXAudioEnum.CLICK);
+                _audioManager.PlayAudio(SFXAudioEnum.CLICK);
         }
     }
 }
