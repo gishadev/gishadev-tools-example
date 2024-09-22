@@ -3,48 +3,42 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Zenject;
+using Object = UnityEngine.Object;
 using Random = System.Random;
 
 namespace gishadev.tools.Pooling
 {
-    public abstract class PoolManager<T> : MonoBehaviour where T : PoolObject, new()
+    public abstract class PoolManager<T> : IInitializable, IDisposable where T : PoolObject, new()
     {
-        public const string POOL_ASSET = "PoolDataSO";
-
+        [Inject] protected PoolDataSO PoolDataSO { get; }
+        
         private Dictionary<IPoolObject, List<GameObject>> _objectsByPoolObject = new();
         private Dictionary<IPoolObject, Transform> _parentByPoolObject = new();
 
-        protected abstract Transform Parent { get; }
+        protected abstract Transform Parent { get; set; }
         protected abstract List<T> PoolObjectsCollection { get; }
 
-        protected PoolDataSO PoolDataSO { get; private set; }
-
-
-        protected virtual void Awake()
+        public virtual void Initialize()
         {
-            PoolDataSO = Resources.Load<PoolDataSO>(POOL_ASSET);
-
             _objectsByPoolObject = new Dictionary<IPoolObject, List<GameObject>>();
             _parentByPoolObject = new Dictionary<IPoolObject, Transform>();
 
             InitializePools(PoolObjectsCollection);
-        }
 
-        private void OnEnable()
-        {
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
-        private void OnDisable()
+        public virtual void Dispose()
         {
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }
-        
+
         // Unload pools.
         private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
         {
-            foreach (var parent in _parentByPoolObject.Values) 
-                Destroy(parent.gameObject);
+            foreach (var parent in _parentByPoolObject.Values)
+                Object.Destroy(parent.gameObject);
 
             _objectsByPoolObject = new Dictionary<IPoolObject, List<GameObject>>();
             _parentByPoolObject = new Dictionary<IPoolObject, Transform>();
@@ -104,7 +98,7 @@ namespace gishadev.tools.Pooling
         {
             Transform parent = _parentByPoolObject[po];
 
-            GameObject createdObject = Instantiate(prefab, parent);
+            GameObject createdObject = Object.Instantiate(prefab, parent);
             _objectsByPoolObject[po].Add(createdObject);
 
             return createdObject;
@@ -135,7 +129,7 @@ namespace gishadev.tools.Pooling
 
             if (index == -1)
             {
-                var newPO = (T) Activator.CreateInstance(typeof(T), prefab);
+                var newPO = (T)Activator.CreateInstance(typeof(T), prefab);
                 poolCollection.Add(newPO);
                 index = poolCollection.Count - 1;
 

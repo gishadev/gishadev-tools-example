@@ -5,26 +5,16 @@ using UnityEngine;
 
 namespace gishadev.tools.Effects
 {
-    public class OtherEmitter : PoolManager<OtherPoolObject>, IPoolEmitter
+    public class OtherEmitter : PoolManager<OtherPoolObject>, IOtherEmitter
     {
-        public static OtherEmitter I
-        {
-            get
-            {
-                if (_current)
-                    return _current;
-
-                _current = new GameObject("[OtherEmitter]").AddComponent<OtherEmitter>();
-                DontDestroyOnLoad(_current.gameObject);
-
-                return _current;
-            }
-        }
-
-        private static OtherEmitter _current;
-
-        protected override Transform Parent => transform;
+        protected override Transform Parent { get; set; }
         protected override List<OtherPoolObject> PoolObjectsCollection => PoolDataSO.OtherPoolObjects.ToList();
+
+        public override void Initialize()
+        {
+            Parent = new GameObject("[OtherEmitter]").transform;
+            base.Initialize();
+        }
 
         public GameObject EmitAt(int index, Vector3 position, Quaternion rotation)
         {

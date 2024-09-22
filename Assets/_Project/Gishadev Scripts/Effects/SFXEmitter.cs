@@ -6,26 +6,16 @@ using UnityEngine;
 
 namespace gishadev.tools.Effects
 {
-    public class SFXEmitter : PoolManager<SFXPoolObject>, IPoolEmitter
+    public class SFXEmitter : PoolManager<SFXPoolObject>, ISFXEmitter
     {
-        public static SFXEmitter I
-        {
-            get
-            {
-                if (_current)
-                    return _current;
-
-                _current = new GameObject("[SFXEmitter]").AddComponent<SFXEmitter>();
-                DontDestroyOnLoad(_current.gameObject);
-                
-                return _current;
-            }
-        }
-
-        private static SFXEmitter _current;
-
-        protected override Transform Parent => transform;
+        protected override Transform Parent { get; set; }
         protected override List<SFXPoolObject> PoolObjectsCollection => PoolDataSO.SFXPoolObjects.ToList();
+
+        public override void Initialize()
+        {
+            Parent = new GameObject("[SFXEmitter]").transform;
+            base.Initialize();
+        }
 
         public GameObject EmitAt(int index, Vector3 position, Quaternion rotation)
         {
