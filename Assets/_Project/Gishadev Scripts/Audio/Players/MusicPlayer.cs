@@ -30,6 +30,7 @@ namespace gishadev.tools.Audio
         // If we have auto-sequencing - start next audio clip when delay is over. 
         private void HandleAutoSequencing(MusicData data)
         {
+            _audioManager.CancelDelayFunc();
             if (_audioManager.AudioMasterData.MusicAutoSequencing)
                 _audioManager.DelayFunc(() =>
                 {
@@ -51,19 +52,21 @@ namespace gishadev.tools.Audio
             _audioManager.CancelDelayFunc();
         }
 
-        private void InitPlay(MusicData newMusic)
+        private async void InitPlay(MusicData newMusic)
         {
             if (_currentMusic != null)
             {
                 if (_currentMusic.IsFade)
-                    _audioManager.FadeOut(_currentMusic);
+                    await _audioManager.FadeOut(_currentMusic);
                 else
                     _currentMusic.Stop();
             }
 
             if (newMusic.IsFade)
-                _audioManager.FadeIn(newMusic);
-            newMusic.AudioSource.Play();
+            {
+                newMusic.AudioSource.Play();
+                await _audioManager.FadeIn(newMusic);
+            }
             _currentMusic = newMusic;
             
             MusicInitiated?.Invoke(_currentMusic);
