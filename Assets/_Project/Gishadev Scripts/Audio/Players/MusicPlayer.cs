@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using gishadev.tools.Core;
 using UnityEngine.Events;
 using Random = UnityEngine.Random;
@@ -11,7 +12,8 @@ namespace gishadev.tools.Audio
         private MusicData _currentMusic;
 
         private UnityEvent<MusicData> MusicInitiated = new();
-
+        private CancellationTokenSource _fadeCTS;
+        
         public MusicPlayer(AudioManager audioManager)
         {
             _audioManager = audioManager;
@@ -54,18 +56,24 @@ namespace gishadev.tools.Audio
 
         private async void InitPlay(MusicData newMusic)
         {
+            _fadeCTS?.Cancel();
+            _fadeCTS = new CancellationTokenSource();
+            
             if (_currentMusic != null)
             {
                 if (_currentMusic.IsFade)
-                    await _audioManager.FadeOut(_currentMusic);
+                    await _audioManager.FadeOut(_currentMusic, _fadeCTS);
                 else
                     _currentMusic.Stop();
             }
 
+            _fadeCTS?.Cancel();
+            _fadeCTS = new CancellationTokenSource();
+            
             if (newMusic.IsFade)
             {
                 newMusic.AudioSource.Play();
-                await _audioManager.FadeIn(newMusic);
+                await _audioManager.FadeIn(newMusic, _fadeCTS);
             }
             _currentMusic = newMusic;
             
