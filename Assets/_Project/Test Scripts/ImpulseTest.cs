@@ -1,8 +1,8 @@
 using System;
-using Cinemachine;
 using gishadev.tools.Audio;
+using Unity.Cinemachine;
 using UnityEngine;
-using Zenject;
+using VContainer;
 
 namespace gishadev.tools.Test
 {
@@ -25,12 +25,12 @@ namespace gishadev.tools.Test
             _impulseSource = GetComponent<CinemachineImpulseSource>();
         }
 
-        private void OnEnable()
+        private void Start()
         {
             _audioManager.AudioStarted += OnAudioStarted;
         }
 
-        private void OnDisable()
+        private void OnDestroy()
         {
             _audioManager.AudioStarted -= OnAudioStarted;
         }

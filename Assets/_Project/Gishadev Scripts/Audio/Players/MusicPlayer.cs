@@ -11,13 +11,13 @@ namespace gishadev.tools.Audio
         private readonly AudioManager _audioManager;
         private MusicData _currentMusic;
 
-        private UnityEvent<MusicData> MusicInitiated = new();
+        private UnityEvent<MusicData> _musicInitiated = new();
         private CancellationTokenSource _fadeCTS;
-        
+
         public MusicPlayer(AudioManager audioManager)
         {
             _audioManager = audioManager;
-            MusicInitiated.AddListener(HandleAutoSequencing);
+            _musicInitiated.AddListener(HandleAutoSequencing);
         }
 
         public override void Play(MusicData data)
@@ -58,7 +58,7 @@ namespace gishadev.tools.Audio
         {
             _fadeCTS?.Cancel();
             _fadeCTS = new CancellationTokenSource();
-            
+
             if (_currentMusic != null)
             {
                 if (_currentMusic.IsFade)
@@ -69,15 +69,16 @@ namespace gishadev.tools.Audio
 
             _fadeCTS?.Cancel();
             _fadeCTS = new CancellationTokenSource();
-            
+
             if (newMusic.IsFade)
             {
                 newMusic.AudioSource.Play();
                 await _audioManager.FadeIn(newMusic, _fadeCTS);
             }
+
             _currentMusic = newMusic;
-            
-            MusicInitiated?.Invoke(_currentMusic);
+
+            _musicInitiated?.Invoke(_currentMusic);
         }
     }
 }

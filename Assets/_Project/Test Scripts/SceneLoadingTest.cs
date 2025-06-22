@@ -1,6 +1,6 @@
 using gishadev.tools.SceneLoading;
 using UnityEngine;
-using Zenject;
+using VContainer;
 
 namespace gishadev.tools.Test
 {

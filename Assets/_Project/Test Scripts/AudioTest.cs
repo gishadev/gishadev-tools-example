@@ -1,6 +1,6 @@
 ﻿using gishadev.tools.Audio;
 using UnityEngine;
-using Zenject;
+using VContainer;
 
 namespace gishadev.tools.Test
 {

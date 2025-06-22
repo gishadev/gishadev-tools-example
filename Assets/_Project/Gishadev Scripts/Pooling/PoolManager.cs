@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Zenject;
+using VContainer;
+using VContainer.Unity;
 using Object = UnityEngine.Object;
 using Random = System.Random;
 
@@ -11,7 +12,7 @@ namespace gishadev.tools.Pooling
 {
     public abstract class PoolManager<T> : IInitializable, IDisposable where T : PoolObject, new()
     {
-        [Inject] protected PoolDataSO PoolDataSO { get; }
+        [Inject] protected PoolDataSO PoolDataSO { get; set; }
 
         private Dictionary<IPoolObject, List<GameObject>> _objectsByPoolObject = new();
         private Dictionary<IPoolObject, Transform> _parentByPoolObject = new();

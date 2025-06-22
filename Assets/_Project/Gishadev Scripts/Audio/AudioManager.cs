@@ -5,7 +5,8 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Zenject;
+using VContainer;
+using VContainer.Unity;
 using Object = UnityEngine.Object;
 
 namespace gishadev.tools.Audio
@@ -13,12 +14,12 @@ namespace gishadev.tools.Audio
     public class AudioManager : IAudioManager, IInitializable, IDisposable
     {
         [Inject] private AudioMasterSO _audioMasterData;
-
+        
         public delegate void DelayedDelegate();
 
         public event Action<AudioData> AudioStarted;
 
-        private GameObject _audioParent;
+        private static GameObject _audioParent;
 
         private float _musicVolumePercentage = 1f;
         private float _sfxVolumePercentage = 1f;
@@ -31,6 +32,9 @@ namespace gishadev.tools.Audio
 
         public void Initialize()
         {
+            if (_audioParent != null)
+                return;
+            
             Init();
             _delayFuncCts = new CancellationTokenSource();
             _cts = new CancellationTokenSource();
@@ -90,8 +94,8 @@ namespace gishadev.tools.Audio
         {
             _audioParent = new GameObject("[Audio Parent]");
             _cts.RegisterRaiseCancelOnDestroy(_audioParent);
-
             Object.DontDestroyOnLoad(_audioParent);
+            
             InitCollection(AudioMasterData.SFXCollection);
             InitCollection(AudioMasterData.MusicCollection);
         }

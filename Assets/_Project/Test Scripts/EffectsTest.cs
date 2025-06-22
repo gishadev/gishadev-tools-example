@@ -1,6 +1,6 @@
 using gishadev.tools.Effects;
 using UnityEngine;
-using Zenject;
+using VContainer;
 
 namespace gishadev.tools.Test
 {
