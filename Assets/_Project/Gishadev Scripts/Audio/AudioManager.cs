@@ -14,7 +14,7 @@ namespace gishadev.tools.Audio
     public class AudioManager : IAudioManager, IInitializable, IDisposable
     {
         [Inject] private AudioMasterSO _audioMasterData;
-        
+
         public delegate void DelayedDelegate();
 
         public event Action<AudioData> AudioStarted;
@@ -26,7 +26,6 @@ namespace gishadev.tools.Audio
 
         private CancellationTokenSource _delayFuncCts;
         private CancellationTokenSource _cts;
-        private CancellationTokenSource _fadeInCts, _fadeOutCts;
 
         public AudioMasterSO AudioMasterData => _audioMasterData;
 
@@ -34,10 +33,12 @@ namespace gishadev.tools.Audio
         {
             if (_audioParent != null)
                 return;
-            
+
             Init();
             _delayFuncCts = new CancellationTokenSource();
             _cts = new CancellationTokenSource();
+            _cts.RegisterRaiseCancelOnDestroy(_audioParent);
+
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
@@ -95,7 +96,7 @@ namespace gishadev.tools.Audio
             _audioParent = new GameObject("[Audio Parent]");
             _cts.RegisterRaiseCancelOnDestroy(_audioParent);
             Object.DontDestroyOnLoad(_audioParent);
-            
+
             InitCollection(AudioMasterData.SFXCollection);
             InitCollection(AudioMasterData.MusicCollection);
         }
@@ -140,7 +141,8 @@ namespace gishadev.tools.Audio
             var volume = audioData.AudioSource.volume;
             var linkedCTS = CancellationTokenSource.CreateLinkedTokenSource(_cts.Token, fadeCTS.Token);
 
-            while (!linkedCTS.IsCancellationRequested && audioData.AudioSource.volume * _musicVolumePercentage > float.Epsilon)
+            while (!linkedCTS.IsCancellationRequested &&
+                   audioData.AudioSource.volume * _musicVolumePercentage > float.Epsilon)
             {
                 volume -= Time.deltaTime / AudioMasterData.FadeTransitionTime * _musicVolumePercentage;
                 audioData.AudioSource.volume = volume;
@@ -160,6 +162,9 @@ namespace gishadev.tools.Audio
         public async void DelayFunc(DelayedDelegate delayedDelegate, float delay)
         {
             var linkedCTS = CancellationTokenSource.CreateLinkedTokenSource(_delayFuncCts.Token, _cts.Token);
+            
+            if (!linkedCTS.IsCancellationRequested)
+                delayedDelegate();
             await UniTask.WaitForSeconds(delay, cancellationToken: linkedCTS.Token).SuppressCancellationThrow();
 
             if (!linkedCTS.IsCancellationRequested)

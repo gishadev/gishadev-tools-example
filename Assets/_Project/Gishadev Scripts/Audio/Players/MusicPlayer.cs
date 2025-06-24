@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using Cysharp.Threading.Tasks;
 using gishadev.tools.Core;
 using UnityEngine.Events;
 using Random = UnityEngine.Random;
@@ -11,7 +12,7 @@ namespace gishadev.tools.Audio
         private readonly AudioManager _audioManager;
         private MusicData _currentMusic;
 
-        private UnityEvent<MusicData> _musicInitiated = new();
+        private readonly UnityEvent<MusicData> _musicInitiated = new();
         private CancellationTokenSource _fadeCTS;
 
         public MusicPlayer(AudioManager audioManager)
@@ -33,7 +34,7 @@ namespace gishadev.tools.Audio
         private void HandleAutoSequencing(MusicData data)
         {
             _audioManager.CancelDelayFunc();
-            if (_audioManager.AudioMasterData.MusicAutoSequencing)
+            if (data.AudioSource != null && _audioManager.AudioMasterData.MusicAutoSequencing)
                 _audioManager.DelayFunc(() =>
                 {
                     var oldIndex = Array.FindIndex(data.AudioClips, x => x == data.AudioSource.clip);
@@ -61,7 +62,7 @@ namespace gishadev.tools.Audio
 
             if (_currentMusic != null)
             {
-                if (_currentMusic.IsFade)
+                if (_currentMusic.IsFade && !_fadeCTS.IsCancellationRequested)
                     await _audioManager.FadeOut(_currentMusic, _fadeCTS);
                 else
                     _currentMusic.Stop();
@@ -70,7 +71,7 @@ namespace gishadev.tools.Audio
             _fadeCTS?.Cancel();
             _fadeCTS = new CancellationTokenSource();
 
-            if (newMusic.IsFade)
+            if (newMusic.AudioSource != null && newMusic.IsFade)
             {
                 newMusic.AudioSource.Play();
                 await _audioManager.FadeIn(newMusic, _fadeCTS);

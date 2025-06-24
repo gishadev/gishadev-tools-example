@@ -50,7 +50,5 @@ MonoBehaviour:
   autoInjectGameObjects: []
   autoInjectScene: 1
   includeInactive: 1
-  isProjectScope: 1
-  autoInjectOnSceneLoad: 1
   audioMasterSO: {fileID: 11400000, guid: 753eea99ab2d7ca4a9ad7ede161ec720, type: 2}
   poolDataSO: {fileID: 11400000, guid: f133627786b81114e866c81242dacc47, type: 2}
