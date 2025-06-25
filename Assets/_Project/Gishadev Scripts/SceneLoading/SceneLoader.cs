@@ -1,5 +1,5 @@
 using Cysharp.Threading.Tasks;
-using DG.Tweening;
+using PrimeTween;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -52,19 +52,15 @@ namespace gishadev.tools.SceneLoading
             _fadeImage.color = new Color(_fadeImage.color.r, _fadeImage.color.g, _fadeImage.color.b, 0f);
             _fadeObject.gameObject.SetActive(true);
 
-            await _fadeImage
-                .DOFade(1f, .5f)
-                .AsyncWaitForCompletion();
+            await Tween.Alpha(_fadeImage, 1f, .5f);
 
             var loadOperation = SceneManager.LoadSceneAsync(sceneToLoad);
 
-            while (!loadOperation.isDone)
+            while (loadOperation != null && !loadOperation.isDone)
                 await UniTask.Yield();
 
-            await _fadeImage
-                .DOFade(0f, .5f)
-                .OnComplete(() => _fadeObject.gameObject.SetActive(false))
-                .AsyncWaitForCompletion();
+            await Tween.Alpha(_fadeImage, 0f, .5f)
+                .OnComplete(() => _fadeObject.gameObject.SetActive(false));
 
             _isLoadingScene = false;
         }

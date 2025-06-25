@@ -1,5 +1,5 @@
-using DG.Tweening;
 using gishadev.tools.Core;
+using PrimeTween;
 using UnityEngine;
 
 namespace gishadev.tools.UI
@@ -12,8 +12,8 @@ namespace gishadev.tools.UI
         private readonly float _fadeDuration = 0.6f;
         private readonly float _scaleDuration = 0.5f;
 
-        private RectTransform _rectTransform;
-        private CanvasGroup _canvasGroup;
+        private readonly RectTransform _rectTransform;
+        private readonly CanvasGroup _canvasGroup;
 
         public PageTransitionProcessor(Page page)
         {
@@ -52,7 +52,7 @@ namespace gishadev.tools.UI
 
         public void DoExitTransition()
         {
-            Sequence seq = DOTween.Sequence();
+            Sequence seq = Sequence.Create();
             switch (_page.ExitTransition)
             {
                 case PageTransitionType.None:
@@ -93,11 +93,8 @@ namespace gishadev.tools.UI
         {
             _rectTransform.localPosition = Vector3.right * startValue;
 
-            var seq = DOTween.Sequence();
-            seq.Append(_rectTransform
-                .DOAnchorPos(Vector3.right * endValue, duration)
-                .SetEase(ease))
-                .SetUpdate(true);
+            var seq = Sequence.Create(sequenceEase: ease, useUnscaledTime: true);
+            seq.Chain(Tween.UIAnchoredPosition(_rectTransform, Vector3.right * endValue, duration));
 
             return seq;
         }
@@ -107,11 +104,8 @@ namespace gishadev.tools.UI
         {
             _rectTransform.localPosition = Vector3.up * startValue;
 
-            var seq = DOTween.Sequence();
-            seq.Append(_rectTransform
-                .DOAnchorPos(Vector3.up * endValue, duration)
-                .SetEase(ease))
-                .SetUpdate(true);
+            var seq = Sequence.Create(sequenceEase: ease, useUnscaledTime: true);
+            seq.Chain(Tween.UIAnchoredPosition(_rectTransform, Vector3.up * endValue, duration));
 
             return seq;
         }
@@ -121,11 +115,8 @@ namespace gishadev.tools.UI
         {
             _canvasGroup.alpha = startValue;
 
-            var seq = DOTween.Sequence();
-            seq.Append(_canvasGroup
-                .DOFade(endValue, duration)
-                .SetEase(ease))
-                .SetUpdate(true);
+            var seq = Sequence.Create(sequenceEase: ease, useUnscaledTime: true);
+            seq.Chain(Tween.Alpha(_canvasGroup, endValue, duration));
 
             return seq;
         }
@@ -135,11 +126,8 @@ namespace gishadev.tools.UI
         {
             _rectTransform.transform.localScale = Vector3.one * startValue;
 
-            var seq = DOTween.Sequence();
-            seq.Append(_rectTransform.transform
-                .DOScale(endValue, duration)
-                .SetEase(ease))
-                .SetUpdate(true);
+            var seq = Sequence.Create(sequenceEase: ease, useUnscaledTime: true);
+            seq.Chain(Tween.Scale(_rectTransform.transform, endValue, duration));
 
             return seq;
         }
