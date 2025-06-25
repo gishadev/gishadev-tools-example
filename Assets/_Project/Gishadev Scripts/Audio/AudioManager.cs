@@ -33,19 +33,14 @@ namespace gishadev.tools.Audio
         {
             if (_audioParent != null)
                 return;
-
             Init();
-            _delayFuncCts = new CancellationTokenSource();
-            _cts = new CancellationTokenSource();
-            _cts.RegisterRaiseCancelOnDestroy(_audioParent);
-
             SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
         public void Dispose()
         {
-            _cts?.Cancel();
             SceneManager.sceneLoaded -= OnSceneLoaded;
+            _cts?.Cancel();
         }
 
         public void SetSFXVolume(float volumePercent)
@@ -94,7 +89,11 @@ namespace gishadev.tools.Audio
         private void Init()
         {
             _audioParent = new GameObject("[Audio Parent]");
+            
+            _delayFuncCts = new CancellationTokenSource();
+            _cts = new CancellationTokenSource();
             _cts.RegisterRaiseCancelOnDestroy(_audioParent);
+            
             Object.DontDestroyOnLoad(_audioParent);
 
             InitCollection(AudioMasterData.SFXCollection);
@@ -162,9 +161,6 @@ namespace gishadev.tools.Audio
         public async void DelayFunc(DelayedDelegate delayedDelegate, float delay)
         {
             var linkedCTS = CancellationTokenSource.CreateLinkedTokenSource(_delayFuncCts.Token, _cts.Token);
-            
-            if (!linkedCTS.IsCancellationRequested)
-                delayedDelegate();
             await UniTask.WaitForSeconds(delay, cancellationToken: linkedCTS.Token).SuppressCancellationThrow();
 
             if (!linkedCTS.IsCancellationRequested)
