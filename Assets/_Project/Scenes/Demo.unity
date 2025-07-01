@@ -1869,12 +1869,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 863273907}
-        m_TargetAssemblyTypeName: gishadev.tools.UI.MenuController, Assembly-CSharp
+        m_TargetAssemblyTypeName: gishadev.tools.UI.MenuController, gishadev-tools
         m_MethodName: PushPage
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 213469292}
-          m_ObjectArgumentAssemblyTypeName: gishadev.tools.UI.Page, Assembly-CSharp
+          m_ObjectArgumentAssemblyTypeName: gishadev.tools.UI.Page, gishadev-tools
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
