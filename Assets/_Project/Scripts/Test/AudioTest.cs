@@ -10,16 +10,16 @@ namespace gishadev.tools.Test
         
         private void Start()
         {
-            _audioManager.PlayAudio(MusicAudioEnum.MUSIC_1);
+            _audioManager.PlayAudio<MusicData>((int)MusicAudioEnum.MUSIC_1);
         }
 
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.N))
-                _audioManager.PlayAudio(MusicAudioEnum.MUSIC_2);
+                _audioManager.PlayAudio<MusicData>((int)MusicAudioEnum.MUSIC_2);
 
             if (Input.GetMouseButtonDown(0))
-                _audioManager.PlayAudio(SFXAudioEnum.CLICK);
+                _audioManager.PlayAudio<SFXData>((int)SFXAudioEnum.CLICK);
         }
     }
 }
