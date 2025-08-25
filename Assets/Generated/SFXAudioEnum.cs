@@ -1,4 +1,4 @@
 public enum SFXAudioEnum
 {
-    CLICK
+	CLICK
 }
