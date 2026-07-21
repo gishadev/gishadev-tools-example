@@ -60,6 +60,10 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     steps:
+      # Checkout so the deploy action has a git repository to push from
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Download Build
         uses: actions/download-artifact@v4
         with:
