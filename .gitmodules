@@ -1,5 +1,5 @@
-[submodule "Assets/_Project/Scripts/tools-polish"]
-	path = Assets/_Project/Scripts/tools-polish
+[submodule "Assets/_Project/Scripts/gishadev-tools"]
+	path = Assets/_Project/Scripts/gishadev-tools
 	url = https://github.com/gishadev/gishadev-tools.git
 [submodule "Assets/_Project/Scripts/unity-setup"]
 	path = Assets/_Project/Scripts/unity-setup
