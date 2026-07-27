@@ -1,0 +1,16 @@
+{
+    "name": "gishadev.tools.Generated",
+    "rootNamespace": "",
+    "references": [
+        "GUID:0b10dfe5f43fa9d4b95c96e00f66989a"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

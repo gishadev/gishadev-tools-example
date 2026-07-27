@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using gishadev.tools.SceneLoading;
 using UnityEngine;
 using VContainer;
@@ -12,7 +13,7 @@ namespace gishadev.tools.Test
         private void Update()
         {
             if (Input.GetKeyDown(KeyCode.J))
-                _sceneLoader.AsyncSceneLoad(nextSceneToLoad);
+                _sceneLoader.LoadScene(nextSceneToLoad).Forget();
         }
     }
 }

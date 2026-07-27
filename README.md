@@ -1,88 +1,29 @@
 # gishadev-tools-example
 
-Example **Unity 6** project demonstrating [`com.gishadev.tools`](https://github.com/gishadev/gishadev-tools) — a toolkit to **polish your game**: audio, effects, pooling, events, state machines and more.
+Example Unity 6 project demonstrating two of my own tools, included as git submodules under `Assets/_Project/Scripts/`.
 
-> _"Tools to polish your game. Audio, Effects and a lot of other stuff!"_
+## [gishadev-tools](https://github.com/gishadev/gishadev-tools)
 
-| | |
-|---|---|
-| **Unity version** | `6000.0.36f1` (Unity 6) |
-| **Tools package** | `com.gishadev.tools` v1.1.3 |
-| **Author** | [Bohdan Tsaplia](https://gishadev.com/) |
+A toolkit to polish your game: audio, pooled effects, events, state machines, scene loading, and general-purpose extensions. See its [README](Assets/_Project/Scripts/gishadev-tools/README.md) for what's inside and how to use it.
 
-## Repository layout
+## [unity-setup](https://github.com/gishadev/unity-setup)
 
-```
-Assets/_Project/
-├── Audio/            Music & SFX
-├── Materials/
-├── Prefabs/
-├── Scenes/
-├── Settings/
-└── Scripts/
-    ├── gishadev-tools/   ← submodule: the tools package (com.gishadev.tools)
-    ├── unity-setup/      ← submodule: editor project-setup automation
-    └── Test/
-```
-
-The two folders under `Scripts/` are **git submodules**:
-
-| Path | Repository |
-|------|------------|
-| `Assets/_Project/Scripts/gishadev-tools` | https://github.com/gishadev/gishadev-tools.git |
-| `Assets/_Project/Scripts/unity-setup`    | https://github.com/gishadev/unity-setup.git |
+An editor window (`Tools → gishadev → Unity Setup`) that scaffolds a new project's folders and imports the packages/assets used in every project. See its [README](Assets/_Project/Scripts/unity-setup/README.md) for what each step does.
 
 ## Getting started
 
-Clone **with submodules** so the tools package and setup scripts are pulled in:
+Clone with submodules so both tools are pulled in:
 
 ```bash
 git clone --recurse-submodules https://github.com/gishadev/gishadev-tools-example.git
 ```
 
-Already cloned without them? Initialize afterwards:
+Already cloned without them?
 
 ```bash
 git submodule update --init --recursive
 ```
 
-Then open the project with Unity **6000.0.36f1**.
-
-## What's inside the tools package
-
-`com.gishadev.tools` (under `Assets/_Project/Scripts/gishadev-tools/Runtime`):
-
-- **Audio** — audio management & playback
-- **Core** — shared building blocks
-- **Effects** — VFX helpers
-- **Events** — event channels (ScriptableObject-based)
-- **Infrastructure** — app/bootstrap plumbing
-- **Pooling** — object pooling
-- **SceneLoading** — async scene loading
-- **StateMachine** — lightweight state machine
-- **UI** — UI utilities
-- **WebGLTemplates** — custom WebGL build templates
-
-Editor tooling (`Editor/`): `AudioEditor`, `PoolEditor`, `EditorDropAreaCreator`, `PolishEditorStyles`.
-
-## Editor setup helpers
-
-The `unity-setup` submodule adds a **`Tools/Setup`** menu to automate first-time project setup:
-
-- **Create Folders** — scaffold the standard project folder structure
-- **Import Essentials** — install core packages (UniTask, VContainer, PrimeTween, …)
-- **Import polishing tools** — install `com.gishadev.tools`
-- **Import Odin** — import Odin Inspector (from Asset Store cache)
-- **Import Editor Helpers** — import vFolders 2 / vFavorites 2
-
-## Key dependencies
-
-- [UniTask](https://github.com/Cysharp/UniTask) — allocation-free async/await
-- [VContainer](https://github.com/hadashiA/VContainer) — dependency injection
-- [PrimeTween](https://github.com/KyryloKuzyk/PrimeTween) — tweening
-- Unity Cinemachine, Timeline, AI Navigation, uGUI
-
 ## License
 
-The tools package is distributed under the license in
-[`Assets/_Project/Scripts/gishadev-tools/LICENSE`](Assets/_Project/Scripts/gishadev-tools/LICENSE).
+MIT — see each submodule's own `LICENSE`.
