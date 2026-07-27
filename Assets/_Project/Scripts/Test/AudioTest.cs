@@ -10,7 +10,7 @@ namespace gishadev.tools.Test
         
         private void Start()
         {
-            _audioManager.PlayMusic((int)MusicAudioEnum.MUSIC_1);
+            _audioManager.PlayMusic(MusicAudioEnum.MUSIC_1);
         }
 
         private void Update()
@@ -21,7 +21,7 @@ namespace gishadev.tools.Test
             }
 
             if (Input.GetMouseButtonDown(0))
-                _audioManager.PlaySFX((int)SFXAudioEnum.CLICK);
+                _audioManager.PlaySFX(SFXAudioEnum.CLICK);
         }
     }
 }
