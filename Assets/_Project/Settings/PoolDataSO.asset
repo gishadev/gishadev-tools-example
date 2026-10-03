@@ -17,6 +17,8 @@ MonoBehaviour:
     <Prefabs>k__BackingField:
     - {fileID: 7923921168708631118, guid: 6069ba8a25c2b4649b68a30b895189cc, type: 3}
     - {fileID: 7923921168708631118, guid: 64a1faa0a6ecfef4c81a7c1ba3721160, type: 3}
+    <AudioClips>k__BackingField:
+    - {fileID: 8300000, guid: 4ad145386d4722c49892e71fa8c7e743, type: 3}
   <VFXPoolObjects>k__BackingField:
   - <Name>k__BackingField: Explosion
     <Prefabs>k__BackingField:

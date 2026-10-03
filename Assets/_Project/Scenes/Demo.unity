@@ -1214,7 +1214,7 @@ MonoBehaviour:
   m_linkedTextComponent: {fileID: 0}
   parentLinkedComponent: {fileID: 0}
   m_enableKerning: 1
-  m_ActiveFontFeatures: 00000000
+  m_ActiveFontFeatures: 6e72656b
   m_enableExtraPadding: 0
   checkPaddingRequired: 0
   m_isRichText: 1
@@ -1363,7 +1363,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47e375cc7b134f6094e3f48d20e40a5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  initialPage: {fileID: 0}
+  initialPopupPage: {fileID: 0}
   firstFocusItem: {fileID: 0}
   zeroPagesAllowed: 1
   popOnSamePagePush: 1
@@ -1869,12 +1869,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 863273907}
-        m_TargetAssemblyTypeName: gishadev.tools.UI.MenuController, gishadev-tools
+        m_TargetAssemblyTypeName: gishadev.tools.UI.MenuController, gishadev.tools
         m_MethodName: PushPage
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 213469292}
-          m_ObjectArgumentAssemblyTypeName: gishadev.tools.UI.Page, gishadev-tools
+          m_ObjectArgumentAssemblyTypeName: gishadev.tools.UI.PopupPage, gishadev.tools
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -2709,9 +2709,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 863273907}
-        m_TargetAssemblyTypeName: gishadev.tools.UI.MenuController, Assembly-CSharp
-        m_MethodName: PopPage
+      - m_Target: {fileID: 213469292}
+        m_TargetAssemblyTypeName: gishadev.tools.UI.PopupPage, gishadev.tools
+        m_MethodName: Pop
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

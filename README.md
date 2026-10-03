@@ -4,7 +4,7 @@ Example Unity 6 project demonstrating two of my own tools, included as git submo
 
 ## [gishadev-tools](https://github.com/gishadev/gishadev-tools)
 
-A toolkit to polish your game: audio, pooled effects, events, state machines, scene loading, and general-purpose extensions. See its [README](Assets/_Project/Scripts/gishadev-tools/README.md) for what's inside and how to use it.
+A toolkit to polish your game: audio, pooled effects, events, state machines, scene loading, saving, and general-purpose extensions. See its [README](Assets/_Project/Scripts/gishadev-tools/README.md) for what's inside and how to use it.
 
 ## [unity-setup](https://github.com/gishadev/unity-setup)
 
