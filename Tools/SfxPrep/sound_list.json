@@ -1,0 +1,57 @@
+{
+    "_doc": "The game's sound list, edited in Tools > gishadev > SFX Prep. Categories hold processing and export settings (channels 1 = mono, 2 = stereo; lufs = target loudness; max_len = longest one-shot in seconds). Sounds get candidates from the sfx-scout skill and from .wav files dropped on the window.",
+    "categories": [
+        {
+            "id": "ui",
+            "folder": "UI",
+            "prefix": "ui",
+            "channels": 1,
+            "lufs": -20.0,
+            "max_len": 1.5,
+            "loop_seconds": 0.0,
+            "crossfade": 0.0,
+            "stream_after": 0.0,
+            "quality": 0.699999988079071
+        },
+        {
+            "id": "gameplay",
+            "folder": "Gameplay",
+            "prefix": "sfx",
+            "channels": 1,
+            "lufs": -18.0,
+            "max_len": 2.5,
+            "loop_seconds": 0.0,
+            "crossfade": 0.0,
+            "stream_after": 0.0,
+            "quality": 0.699999988079071
+        },
+        {
+            "id": "ambience",
+            "folder": "Ambience",
+            "prefix": "amb",
+            "channels": 2,
+            "lufs": -26.0,
+            "max_len": 12.0,
+            "loop_seconds": 0.0,
+            "crossfade": 0.0,
+            "stream_after": 0.0,
+            "quality": 0.699999988079071
+        }
+    ],
+    "sounds": [
+        {
+            "id": "ui-button-click",
+            "category": "ui",
+            "type": "One-shot",
+            "description": "",
+            "order": 1,
+            "channels": 0,
+            "lufs": 0.0,
+            "max_len": 0.0,
+            "loop_seconds": 0.0,
+            "crossfade": 0.0,
+            "candidates": [],
+            "excluded": []
+        }
+    ]
+}
